@@ -1,0 +1,60 @@
+{
+  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
+  "tasks": {
+    "commit_lint": "commitlint --edit -V",
+    "version_update": "./versionup.sh",
+    "citation_validate": "docker run --rm -v $(pwd):/app citationcff/cffconvert --validate",
+    "setup": "./setup.sh"
+  },
+  "license": "AGPL-3.0-or-later",
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 80,
+    "semiColons": true,
+    "indentWidth": 2,
+    "singleQuote": false
+  },
+  "lint": {
+    "rules": {
+      "tags": [
+        "jsr",
+        "jsx",
+        "recommended"
+      ],
+      "include": [
+        "ban-untagged-todo",
+        "camelcase",
+        "default-param-last",
+        "eqeqeq",
+        "explicit-function-return-type",
+        "explicit-module-boundary-types",
+        "guard-for-in",
+        "jsx-boolean-value",
+        "no-await-in-loop",
+        "no-boolean-literal-for-arguments",
+        "no-const-assign",
+        "no-eval",
+        "no-external-import",
+        "no-implicit-declare-namespace-export",
+        "no-inferrable-types",
+        "no-non-null-asserted-optional-chain",
+        "no-non-null-assertion",
+        "no-self-compare",
+        "no-sparse-arrays",
+        "no-sync-fn-in-async-fn",
+        "no-throw-literal",
+        "no-top-level-await",
+        "no-undef",
+        "no-useless-rename",
+        "prefer-ascii",
+        "single-var-declarator"
+      ]
+    },
+    "report": "pretty"
+  },
+  "unstable": [
+    "worker-options",
+    "cron",
+    "kv"
+  ]
+}
