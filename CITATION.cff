@@ -1,0 +1,38 @@
+cff-version: "1.2.0"
+message: "If you use this software, please cite it using the metadata from this file."
+title: "Splikan"
+type: software
+authors:
+  - given-names: "João Augusto"
+    family-names: "Costa Branco Marado Torres"
+    email: "torres.dev@disroot.org"
+    orcid: "https://orcid.org/0009-0008-6827-1030"
+    website: "https://github.com/torres-engineer/splikan"
+#identifiers:
+#  - type: doi
+#    value:
+#    description:
+#  - type: url
+#    value:
+#    description:
+#  - type: swh
+#    value:
+#    description:
+#  - type: other
+#    value:
+#    description:
+# repository: 'https://github.com/torres-engineer/splikan'
+repository-code: 'https://github.com/torres-engineer/splikan'
+url: 'https://github.com/torres-engineer/splikan'
+abstract: "S2S (Student-to-Student) peer tutoring made easy!"
+keywords:
+  - "splikan"
+  - "school"
+  - "student-to-student"
+  - "peer tutoring"
+  - "tutoring"
+license:
+  - AGPL-3.0-or-later
+commit: aa1e55d21ee2d69e062c0b0ff2849afa8540fc8a
+version: 0.1.0
+date-released: 2025-03-23

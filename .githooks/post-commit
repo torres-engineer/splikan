@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ "$GIT_COMMITTER_NAME" = "Git Hook" ]; then
+    exit 0
+fi
+
+VERSION_FILE="VERSION"
+
+COMMIT_HASH=$(git rev-parse HEAD)
+if git log -1 -- "$VERSION_FILE" > /dev/null 2>&1; then
+    VERSION=$(cat "$VERSION_FILE")
+
+    SEMVER_REGEX="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+
+    perl -e "exit ('$VERSION' =~ /$SEMVER_REGEX/ ? 0 : 1)" || {
+	    cat "Error: Version '$VERSION' is not valid SemVer."
+        exit 1
+    }
+
+    if ! git rev-parse "v$VERSION" > /dev/null 2>&1; then
+        git tag -s "v$VERSION" -m "Version $VERSION"
+    fi
+fi
+
+CITATION_FILE="CITATION.cff"
+DATE_RELEASED=$(git log -1 --format=%cd --date=format:"%Y-%m-%d")
+
+if [ -f "$CITATION_FILE" ]; then
+    sed -i "/^commit:/c\commit: $COMMIT_HASH" "$CITATION_FILE"
+    sed -i "/^date-released:/c\date-released: $DATE_RELEASED" "$CITATION_FILE"
+
+    git add "$CITATION_FILE"
+    GIT_COMMITTER_NAME="Git Hook" git commit --amend --no-edit --no-verify --no-gpg-sign
+fi
