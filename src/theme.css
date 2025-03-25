@@ -1,0 +1,60 @@
+@theme {
+  --color-primary: 49 163 84;
+  --color-secondary: 173 221 142;
+  --color-accent: 247 252 185;
+
+  --ff-s-garamond:
+    Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text",
+    "Times New Roman";
+  --ff-s-lucida-bright: "Lucida Bright", Georgia;
+  --ff-s-palatino:
+    Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia;
+  --ff-s-big-caslon: "Big Caslon", "Book Antiqua", "Palatino Linotype", Georgia;
+  --ff-s-didot:
+    Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman";
+  --ff-s-baskerville:
+    Baskerville, "Baskerville old face", "Hoefler Text", Garamond,
+    "Times New Roman";
+  --ff-s-hoefler-text:
+    "Hoefler Text", "Baskerville old face", Garamond, "Times New Roman";
+  --ff-s-bodoni:
+    "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Garamond,
+    "Times New Roman";
+  --ff-s-goudy-old-style:
+    "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman";
+  --ff-s-constania:
+    Constantia, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia;
+  --ff-s-cambria: Cambria, Georgia;
+  --ff-s-book-antiqua:
+    "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia;
+
+  --ff-ss-optima: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial;
+  --ff-ss-futura: Futura, "Trebuchet MS", Arial;
+  --ff-ss-gill-sans: "Gill Sans", "Gill Sans MT", Calibri;
+  --ff-ss-trebuchet:
+    "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans",
+    Tahoma;
+  --ff-ss-helvetica-neue: "Helvetica Neue", Helvetica, Arial;
+  --ff-ss-verdana: Verdana, Geneva;
+  --ff-ss-lucida-grande:
+    "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana;
+  --ff-ss-geneva: Geneva, Tahoma, Verdana;
+  --ff-ss-segoe: Segoe, "Segoe UI", "Helvetica Neue", Arial;
+  --ff-ss-candara: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial;
+  --ff-ss-calibri: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial;
+  --ff-ss-franklin-gothic-medium: "Franklin Gothic Medium", Arial;
+  --ff-ss-tamoha: Tahoma, Geneva, Verdana;
+
+  --font-serif: var(--ff-s-palatino), ui-serif, serif;
+  --font-sans: var(--ff-ss-gill-sans), ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, monospace, monospace;
+  --font-icons: "glyphicons", emoji;
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-primary: 49 163 84;
+    --color-secondary: 173 221 142;
+    --color-accent: 247 252 185;
+  }
+}
