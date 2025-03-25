@@ -3,6 +3,7 @@ import {
   type ViteCustomizableConfig,
 } from "@solidjs/start/config";
 import { default as Inspect } from "vite-plugin-inspect";
+import { default as tailwindcss } from "@tailwindcss/vite";
 
 export default defineConfig({
   solid: {},
@@ -47,6 +48,7 @@ export default defineConfig({
           build: true,
           outputDir: ".vite-inspect",
         }),
+        tailwindcss(),
       ],
       html: {
         //cspNonce: "",

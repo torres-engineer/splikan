@@ -19,6 +19,8 @@
     "@commitlint/config-conventional": "^19.7.1",
     "@commitlint/format": "^19.5.0",
     "@commitlint/types": "^19.5.0",
+    "@tailwindcss/vite": "^4.0.15",
+    "tailwindcss": "^4.0.15",
     "vite-plugin-inspect": "^11.0.0"
   },
   "engines": {
