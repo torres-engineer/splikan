@@ -65,6 +65,11 @@ else
     exit 1
 fi
 
+if ! deno task test; then
+  echo "Please run \`deno task test\`."
+  exit 1
+fi
+
 # Cross platform projects tend to avoid non-ASCII filenames; prevent
 # them from being added to the repository. We exploit the fact that the
 # printable range starts at the space character and ends with tilde.

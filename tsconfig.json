@@ -13,7 +13,10 @@
     "noEmit": true,
     "types": [
       "vinxi/types/client",
-      "solid-js"
+      "solid-js",
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "vitest/importMeta"
     ],
     "isolatedModules": true,
     "paths": {

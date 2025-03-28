@@ -4,7 +4,11 @@
     "commit_lint": "commitlint --edit -V",
     "version_update": "./versionup.sh",
     "citation_validate": "docker run --rm -v $(pwd):/app citationcff/cffconvert --validate",
-    "setup": "./setup.sh"
+    "setup": "./setup.sh",
+    "test": "vitest run --passWithNoTests",
+    "test-watch": "vitest",
+    "test-ui": "vitest --ui",
+    "coverage": "vitest run --coverage"
   },
   "license": "AGPL-3.0-or-later",
   "fmt": {
