@@ -9,8 +9,8 @@ export default defineConfig({
       Deno.env.get("GITHUB_ACTIONS") ? ["github-actions"] : [],
     ),
     outputFile: {
-      json: "./json-report.json",
-      html: "./html-report.html",
+      json: "./test_report/json-report.json",
+      html: "./test_report/html-report.html",
     },
   },
   plugins: [solid()],
