@@ -33,7 +33,11 @@ along with Splikan.  If not, see <https: //www.gnu.org/licenses/>.
     "test-watch": "vitest",
     "test-ui": "vitest --ui",
     "coverage": "vitest run --coverage",
-    "gen_docs_nav": "deno run --allow-read --allow-write ./generate_nav.ts"
+    "gen_docs_nav": "deno run --allow-read --allow-write ./generate_nav.ts",
+    "make_migartion": "kysely migrate:make -x ts",
+    "make_seed": "kysely seed:make -x ts",
+    "migrate": "kysely migrate:latest",
+    "codegen_db": "kysely-codegen --dialect libsql --camel-case"
   },
   "license": "AGPL-3.0-or-later",
   "imports": {

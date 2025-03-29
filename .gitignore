@@ -49,3 +49,5 @@ Thumbs.db
 /test_report
 /.vite-inspect
 /src/generated
+
+data.sqld
