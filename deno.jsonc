@@ -1,6 +1,30 @@
+/*
+Splikan - S2S (Student-to-Student) peer tutoring made easy!
+Copyright (C) 2025  Joao Augusto Costa Branco Marado Torres
+<torres.dev@disroot.org>
+
+This file is part of Splikan.
+
+Splikan is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+Splikan is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for
+more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with Splikan.  If not, see <https: //www.gnu.org/licenses/>.
+*/
 {
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "tasks": {
+    "dev": { "command": "vinxi dev", "dependencies": ["gen_docs_nav"] },
+    "build": { "command": "vinxi build", "dependencies": ["gen_docs_nav"] },
+    "start": "vinxi start",
+    "version": "vinxi version",
     "commit_lint": "commitlint --edit -V",
     "version_update": "./versionup.sh",
     "citation_validate": "docker run --rm -v $(pwd):/app citationcff/cffconvert --validate",
@@ -8,9 +32,14 @@
     "test": "vitest run --passWithNoTests",
     "test-watch": "vitest",
     "test-ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "gen_docs_nav": "deno run --allow-read --allow-write ./generate_nav.ts"
   },
   "license": "AGPL-3.0-or-later",
+  "imports": {
+    "@valibot/valibot": "jsr:@valibot/valibot@^1.0.0",
+    "solid-js": "npm:solid-js"
+  },
   "fmt": {
     "useTabs": false,
     "lineWidth": 80,
@@ -52,13 +81,16 @@
         "no-useless-rename",
         "prefer-ascii",
         "single-var-declarator"
-      ]
+      ],
+      "exclude": ["jsx-key"]
     },
-    "report": "pretty"
+    "report": "pretty",
+    "exclude": ["./src/components/ui"]
   },
   "unstable": [
     "worker-options",
     "cron",
     "kv"
-  ]
+  ],
+  "nodeModulesDir": "auto"
 }
