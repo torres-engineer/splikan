@@ -152,7 +152,6 @@ export async function up(db: Kysely<InitialDB>): Promise<void> {
     .addColumn("to", "datetime", (col) => col.notNull())
     .addColumn("max_students", "integer", (col) => col.notNull().unsigned())
     .addColumn("accepted", "boolean", (col) => col.notNull().defaultTo(sql`0`))
-    .addColumn("finished", "boolean", (col) => col.notNull().defaultTo(sql`0`))
     .addColumn(
       "tutor_id",
       "integer",
