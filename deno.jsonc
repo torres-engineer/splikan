@@ -21,7 +21,10 @@ along with Splikan.  If not, see <https: //www.gnu.org/licenses/>.
 {
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "tasks": {
-    "dev": { "command": "vinxi dev", "dependencies": ["gen_docs_nav"] },
+    "dev": {
+      "command": "vinxi dev",
+      "dependencies": ["setup", "gen_docs_nav"]
+    },
     "build": { "command": "vinxi build", "dependencies": ["gen_docs_nav"] },
     "start": "vinxi start",
     "version": "vinxi version",

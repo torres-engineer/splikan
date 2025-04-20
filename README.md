@@ -7,7 +7,6 @@ Once you've created a project and installed dependencies with
 server:
 
 ```bash
-deno task setup
 deno task dev -- --open
 ```
 
