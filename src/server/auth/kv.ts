@@ -18,18 +18,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { DB } from "kysely-codegen";
-import { Kysely } from "kysely";
-import { LibsqlDialect } from "@libsql/kysely-libsql";
-import { createClient } from "redis";
+import type { SecondaryStorage } from "better-auth";
+import type { RedisClientType } from "redis";
 
-export const dialect = new LibsqlDialect({
-  url: Deno.env.get("DATABASE_URL") ?? "file:./data",
-  // authToken: "<token>", // optional
-});
+export class AuthKV implements SecondaryStorage {
+  private readonly kv: RedisClientType;
 
-export const db = new Kysely<DB>({
-  dialect: dialect,
-});
+  public constructor(kv: RedisClientType) {
+    this.kv = kv;
+  }
 
-export const authKV = createClient();
+  public async get(key: string): Promise<string | null> {
+    await this.kv.connect();
+    return this.kv.get(key);
+  }
+
+  public async set(
+    key: string,
+    value: string,
+    ttl?: number,
+  ): Promise<void | null | string> {
+    await this.kv.connect();
+    return this.kv.set(key, value, { EX: ttl });
+  }
+
+  public async delete(key: string): Promise<void | null | string> {
+    await this.kv.connect();
+    return this.kv.del(key);
+  }
+}

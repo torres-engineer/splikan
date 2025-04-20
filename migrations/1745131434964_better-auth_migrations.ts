@@ -18,18 +18,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
+import { type Kysely, sql } from "kysely";
+import type { DB as InitialDB } from "./1743126287135_initial.ts";
 import type { DB } from "kysely-codegen";
-import { Kysely } from "kysely";
-import { LibsqlDialect } from "@libsql/kysely-libsql";
-import { createClient } from "redis";
+export type { DB };
 
-export const dialect = new LibsqlDialect({
-  url: Deno.env.get("DATABASE_URL") ?? "file:./data",
-  // authToken: "<token>", // optional
-});
+const migrationFile = "better-auth_migrations/2025-04-20T15-57-09.605Z.sql";
+export async function up(db: Kysely<InitialDB>): Promise<void> {
+  await Deno.readTextFile(migrationFile).then((raw) => {
+    for (const i of raw.split("\n\n")) {
+      sql`${sql.raw(i)}`.execute(db);
+    }
+  });
+}
 
-export const db = new Kysely<DB>({
-  dialect: dialect,
-});
-
-export const authKV = createClient();
+export async function down(db: Kysely<DB>): Promise<void> {
+  await db.schema.dropTable("verification").execute();
+  await db.schema.dropTable("account").execute();
+  await db.schema.dropTable("session").execute();
+  await db.schema.dropTable("user").execute();
+}

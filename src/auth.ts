@@ -18,18 +18,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { DB } from "kysely-codegen";
-import { Kysely } from "kysely";
-import { LibsqlDialect } from "@libsql/kysely-libsql";
-import { createClient } from "redis";
+import { betterAuth } from "better-auth";
+import { username } from "better-auth/plugins";
+import { authKV, db } from "./server/db.ts";
+import { AuthKV } from "./server/auth/kv.ts";
+import type { RedisClientType } from "redis";
+import { genericOAuth } from "better-auth/plugins";
+import { providers } from "./server/auth/providers.ts";
 
-export const dialect = new LibsqlDialect({
-  url: Deno.env.get("DATABASE_URL") ?? "file:./data",
-  // authToken: "<token>", // optional
+export const auth = betterAuth({
+  database: {
+    db,
+    type: "sqlite",
+  },
+  secondaryStorage: new AuthKV(authKV as RedisClientType),
+  session: {
+    additionalFields: {
+      lang: {
+        type: "string",
+        required: false,
+        defaultValue: "en",
+      },
+    },
+  },
+  databaseHooks: {},
+  emailAndPassword: {
+    enabled: false,
+  },
+  plugins: [
+    genericOAuth({ config: providers }),
+    username(),
+  ],
 });
 
-export const db = new Kysely<DB>({
-  dialect: dialect,
-});
-
-export const authKV = createClient();
+export type Session = typeof auth.$Infer.Session;

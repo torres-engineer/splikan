@@ -18,18 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { DB } from "kysely-codegen";
-import { Kysely } from "kysely";
-import { LibsqlDialect } from "@libsql/kysely-libsql";
-import { createClient } from "redis";
+import type { genericOAuth } from "better-auth/plugins";
 
-export const dialect = new LibsqlDialect({
-  url: Deno.env.get("DATABASE_URL") ?? "file:./data",
-  // authToken: "<token>", // optional
-});
-
-export const db = new Kysely<DB>({
-  dialect: dialect,
-});
-
-export const authKV = createClient();
+type GenericOAuthOptions = Parameters<typeof genericOAuth>[0];
+export const providers: GenericOAuthOptions["config"] = [];
