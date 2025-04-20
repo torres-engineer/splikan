@@ -23,8 +23,7 @@ import { Kysely } from "kysely";
 import { LibsqlDialect } from "@libsql/kysely-libsql";
 
 export const dialect = new LibsqlDialect({
-  //url: "file:./dev.db",
-  url: "libsql://localhost:8080?tls=0",
+  url: Deno.env.get("DATABASE_URL") ?? "file:./data",
   // authToken: "<token>", // optional
 });
 

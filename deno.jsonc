@@ -37,7 +37,7 @@ along with Splikan.  If not, see <https: //www.gnu.org/licenses/>.
     "make_migartion": "kysely migrate:make -x ts",
     "make_seed": "kysely seed:make -x ts",
     "migrate": "kysely migrate:latest",
-    "codegen_db": "kysely-codegen --dialect libsql --camel-case"
+    "codegen_db": "kysely-codegen --dialect libsql"
   },
   "license": "AGPL-3.0-or-later",
   "imports": {

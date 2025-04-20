@@ -27,11 +27,31 @@ import { Separator } from "~/components/ui/separator";
 import { Footer } from "~/components/Footer";
 import SignInForm from "~/components/SignInForm";
 import { Button } from "~/components/ui/button";
-import { A, useNavigate } from "@solidjs/router";
+import {
+  A,
+  createAsync,
+  type RouteDefinition,
+  useNavigate,
+} from "@solidjs/router";
+import { getActiveTutors, getClassStats } from "~/lib";
+
+export const route = {
+  preload(): void {
+    getClassStats();
+    getActiveTutors();
+  },
+} satisfies RouteDefinition;
 
 export default function Home(): JSX.Element {
   const navigate = useNavigate();
+
   const signInForm = <SignInForm />;
+
+  const classStats = createAsync(() => getClassStats(), { deferStream: true });
+  const activeTutors = createAsync(() => getActiveTutors(), {
+    deferStream: true,
+  });
+
   return (
     <main>
       <Header />
@@ -42,10 +62,10 @@ export default function Home(): JSX.Element {
       </div>
       <div class="my-2">
         <Achievements
-          completedClasses={0}
-          studentsTutored={0}
-          activeTutors={0}
-          hoursOfTutoring={0}
+          completedClasses={classStats()?.completed_classes ?? 0}
+          studentsTutored={classStats()?.students_tutored ?? 0}
+          activeTutors={activeTutors() ?? 0}
+          hoursOfTutoring={classStats()?.hours_tutored ?? 0}
         />
       </div>
       <Tabs defaultValue="about" class="w-full sm:hidden">

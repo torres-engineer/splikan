@@ -20,3 +20,7 @@
 set -xe
 
 git config core.hooksPath .githooks
+
+deno task migrate
+deno task codegen_db
+deno task --eval "kysely seed:run"

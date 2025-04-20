@@ -18,13 +18,238 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Kysely } from "kysely";
+import { type Kysely, sql } from "kysely";
+import type { DB } from "kysely-codegen";
 
 type InitialDB = Record<string | number | symbol, never>;
-export type { DB } from "kysely-codegen";
+export type { DB };
 
 export async function up(db: Kysely<InitialDB>): Promise<void> {
-  await db.schema.createTable("test")
+  await db.schema.createTable("school")
     .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("domain", "text", (col) => col.unique().notNull())
     .execute();
+  await db.schema.createIndex("school_domain_unique_index")
+    .on("school")
+    .columns(["domain"])
+    .execute();
+  await db.schema.createTable("degree_type")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("name", "text", (col) => col.notNull().unique())
+    .execute();
+  await db.schema.createTable("degree")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("code", "text", (col) => col.unique())
+    .addColumn("name", "text", (col) => col.notNull())
+    .addColumn(
+      "school_id",
+      "integer",
+      (col) => col.notNull().references("school.id").onDelete("cascade"),
+    )
+    .addColumn(
+      "type_id",
+      "integer",
+      (col) => col.notNull().references("degree_type.id").onDelete("set null"),
+    )
+    .execute();
+  await db.schema.createIndex("degree_unique_index")
+    .on("degree")
+    .columns(["code", "name"])
+    .execute();
+  await db.schema.createTable("student")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("hash", "uuid", (col) => col.unique().notNull())
+    .addColumn("student_id", "text", (col) => col.notNull())
+    .addColumn(
+      "school_id",
+      "integer",
+      (col) => col.notNull().references("school.id").onDelete("cascade"),
+    )
+    .addColumn("name", "text", (col) => col.notNull())
+    .addColumn("profile_pic", "blob")
+    .addColumn(
+      "updated_at",
+      "datetime",
+      (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
+    .addUniqueConstraint("unique_school_student", ["student_id", "school_id"])
+    .execute();
+  await db.schema.createIndex("student_unique_index")
+    .on("student")
+    .columns(["student_id", "school_id"])
+    .execute();
+  await db.schema.createTable("tutor")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn(
+      "student_id",
+      "integer",
+      (col) =>
+        col.notNull().references("student.id").unique().onDelete("cascade"),
+    )
+    .addColumn(
+      "degree_id",
+      "integer",
+      (col) => col.references("degree.id").onDelete("set null"),
+    )
+    .addColumn("price", "float4", (col) => col.unsigned())
+    .addColumn("price_unit", "text", (col) => col.notNull().defaultTo(sql`"h"`))
+    .addColumn(
+      "price_currency",
+      "text",
+      (col) => col.notNull().defaultTo(sql`"EUR"`),
+    )
+    .addColumn("max_students_per_class", "integer", (col) => col.unsigned())
+    .addColumn("gpa", "integer", (col) => col.unsigned())
+    .addColumn("description", "text")
+    .addColumn("curriculum_vitae", "text")
+    .addColumn("pause", "boolean", (col) => col.notNull().defaultTo(sql`1`))
+    .execute();
+  await db.schema.createTable("study_area_group")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("name", "text", (col) => col.notNull().unique())
+    .execute();
+  await db.schema.createTable("study_area")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("name", "text", (col) => col.notNull().unique())
+    .addColumn(
+      "group_id",
+      "integer",
+      (col) =>
+        col.notNull().references("study_area_group.id").onDelete("set null"),
+    )
+    .execute();
+  await db.schema.createTable("unavailable_block")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn(
+      "tutor_id",
+      "integer",
+      (col) => col.notNull().references("tutor.id").onDelete("cascade"),
+    )
+    .addColumn("from", "datetime", (col) => col.notNull())
+    .addColumn("to", "datetime", (col) => col.notNull())
+    .addColumn("until", "datetime")
+    .addColumn("repeat", "integer", (col) => col.unsigned())
+    .addColumn("repeat_unit", "text")
+    .addColumn("repeat_on", "integer", (col) => col.unsigned())
+    .execute();
+  await db.schema.createTable("location")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("name", "text", (col) => col.notNull())
+    .addColumn(
+      "tutor_id",
+      "integer",
+      (col) => col.notNull().references("tutor.id").onDelete("cascade"),
+    )
+    .addColumn("latitude", "float4", (col) => col.notNull())
+    .addColumn("longitude", "float4", (col) => col.notNull())
+    .execute();
+  await db.schema.createTable("class")
+    .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
+    .addColumn("hash", "uuid", (col) => col.unique().notNull())
+    .addColumn("private", "boolean", (col) => col.notNull())
+    .addColumn("pass", "blob")
+    .addColumn("from", "datetime", (col) => col.notNull())
+    .addColumn("to", "datetime", (col) => col.notNull())
+    .addColumn("max_students", "integer", (col) => col.notNull().unsigned())
+    .addColumn("accepted", "boolean", (col) => col.notNull().defaultTo(sql`0`))
+    .addColumn("finished", "boolean", (col) => col.notNull().defaultTo(sql`0`))
+    .addColumn(
+      "tutor_id",
+      "integer",
+      (col) => col.notNull().references("tutor.id").onDelete("set null"),
+    )
+    .addColumn(
+      "location_id",
+      "integer",
+      (col) => col.notNull().references("location.id").onDelete("restrict"),
+    )
+    .execute();
+  await db.schema.createTable("tutor_review")
+    .addColumn("rating", "integer", (col) => col.notNull())
+    .addColumn("comment", "text", (col) => col.notNull())
+    .addColumn(
+      "tutor_id",
+      "integer",
+      (col) => col.notNull().references("tutor.id").onDelete("cascade"),
+    )
+    .addColumn(
+      "student_id",
+      "integer",
+      (col) => col.notNull().references("student.id").onDelete("cascade"),
+    )
+    .addPrimaryKeyConstraint("primary_key", ["tutor_id", "student_id"])
+    .execute();
+  await db.schema.createTable("student_review")
+    .addColumn("rating", "integer", (col) => col.notNull())
+    .addColumn("comment", "text", (col) => col.notNull())
+    .addColumn("tutor_response", "text")
+    .addColumn(
+      "tutor_id",
+      "integer",
+      (col) => col.notNull().references("tutor.id").onDelete("cascade"),
+    )
+    .addColumn(
+      "student_id",
+      "integer",
+      (col) => col.notNull().references("student.id").onDelete("set null"),
+    )
+    .addPrimaryKeyConstraint("primary_key", ["tutor_id", "student_id"])
+    .execute();
+  await db.schema.createTable("block")
+    .addColumn(
+      "blocked_by_id",
+      "integer",
+      (col) => col.notNull().references("student.id").onDelete("cascade"),
+    )
+    .addColumn(
+      "blocked_id",
+      "integer",
+      (col) => col.notNull().references("student.id").onDelete("cascade"),
+    )
+    .addPrimaryKeyConstraint("primary_key", ["blocked_by_id", "blocked_id"])
+    .execute();
+  await db.schema.createTable("student_class")
+    .addColumn(
+      "student_id",
+      "integer",
+      (col) => col.notNull().references("student.id").onDelete("cascade"),
+    )
+    .addColumn(
+      "class_id",
+      "integer",
+      (col) => col.notNull().references("class.id").onDelete("cascade"),
+    )
+    .addPrimaryKeyConstraint("primary_key", ["student_id", "class_id"])
+    .execute();
+  await db.schema.createTable("tutor_study_area")
+    .addColumn(
+      "tutor_id",
+      "integer",
+      (col) => col.notNull().references("tutor.id").onDelete("cascade"),
+    )
+    .addColumn(
+      "study_area_id",
+      "integer",
+      (col) => col.notNull().references("study_area.id").onDelete("cascade"),
+    )
+    .addPrimaryKeyConstraint("primary_key", ["tutor_id", "study_area_id"])
+    .execute();
+}
+
+export async function down(db: Kysely<DB>): Promise<void> {
+  await db.schema.dropTable("tutor_study_area").execute();
+  await db.schema.dropTable("student_class").execute();
+  await db.schema.dropTable("block").execute();
+  await db.schema.dropTable("student_review").execute();
+  await db.schema.dropTable("tutor_review").execute();
+  await db.schema.dropTable("class").execute();
+  await db.schema.dropTable("location").execute();
+  await db.schema.dropTable("unavailable_block").execute();
+  await db.schema.dropTable("study_area").execute();
+  await db.schema.dropTable("study_area_group").execute();
+  await db.schema.dropTable("tutor").execute();
+  await db.schema.dropTable("student").execute();
+  await db.schema.dropTable("degree").execute();
+  await db.schema.dropTable("degree_type").execute();
+  await db.schema.dropTable("school").execute();
 }
