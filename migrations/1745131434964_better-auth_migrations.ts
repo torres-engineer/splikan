@@ -23,7 +23,7 @@ import type { DB as InitialDB } from "./1743126287135_initial.ts";
 import type { DB } from "kysely-codegen";
 export type { DB };
 
-const migrationFile = "better-auth_migrations/2025-04-20T15-57-09.605Z.sql";
+const migrationFile = "better-auth_migrations/2025-04-21T01-12-43.027Z.sql";
 export async function up(db: Kysely<InitialDB>): Promise<void> {
   await Deno.readTextFile(migrationFile).then((raw) => {
     for (const i of raw.split("\n\n")) {

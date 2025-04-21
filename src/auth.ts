@@ -19,12 +19,12 @@
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { betterAuth } from "better-auth";
-import { username } from "better-auth/plugins";
+import { anonymous, genericOAuth, username } from "better-auth/plugins";
 import { authKV, db } from "./server/db.ts";
 import { AuthKV } from "./server/auth/kv.ts";
 import type { RedisClientType } from "redis";
-import { genericOAuth } from "better-auth/plugins";
 import { providers } from "./server/auth/providers.ts";
+import { getLocalIPs } from "./lib/utils.ts";
 
 export const auth = betterAuth({
   database: {
@@ -43,12 +43,16 @@ export const auth = betterAuth({
   },
   databaseHooks: {},
   emailAndPassword: {
-    enabled: false,
+    enabled: Deno.env.get("NODE_ENV") !== "production",
+    minPasswordLength: 1,
   },
   plugins: [
     genericOAuth({ config: providers }),
-    username(),
+    username({ minUsernameLength: 1 }),
+    anonymous(),
   ],
+  trustedOrigins: getLocalIPs().map((x) => `http://${x}:3000`),
+  advanced: { cookiePrefix: "splikan" },
 });
 
 export type Session = typeof auth.$Infer.Session;

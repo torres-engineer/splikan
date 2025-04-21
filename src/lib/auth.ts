@@ -19,12 +19,20 @@
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { createAuthClient } from "better-auth/solid";
-import { genericOAuthClient, usernameClient } from "better-auth/client/plugins";
+import {
+  anonymousClient,
+  genericOAuthClient,
+  inferAdditionalFields,
+  usernameClient,
+} from "better-auth/client/plugins";
+import type { auth } from "../auth.ts";
 
 export const authClient = createAuthClient({
   plugins: [
     genericOAuthClient(),
     usernameClient(),
+    anonymousClient(),
+    inferAdditionalFields<typeof auth>(),
   ],
 });
 

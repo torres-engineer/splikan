@@ -7,7 +7,8 @@ CREATE TABLE "user" (
   "createdAt" date NOT NULL,
   "updatedAt" date NOT NULL,
   "username" text UNIQUE,
-  "displayUsername" text
+  "displayUsername" text,
+  "isAnonymous" integer
 );
 
 CREATE TABLE "account" (

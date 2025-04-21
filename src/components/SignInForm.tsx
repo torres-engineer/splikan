@@ -32,10 +32,53 @@ import { type ComponentProps, For, type JSX, Show, splitProps } from "solid-js";
 import { Callout, CalloutContent, CalloutTitle } from "./ui/callout";
 import { Button } from "./ui/button";
 import { cn } from "~/lib/utils";
+import { signIn } from "~/lib/sign_in";
+import {
+  TextField,
+  TextFieldErrorMessage,
+  TextFieldInput,
+  TextFieldLabel,
+} from "./ui/text-field";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { useNavigate } from "@solidjs/router";
 
-type Provider = {
-  provider: string;
-};
+const PROVIDERS = ["localhost"];
+
+const ProviderSchema = v.pipe(
+  v.string(),
+  v.picklist(PROVIDERS, "You need to select one of the valid providers"),
+  v.readonly(),
+  v.title("Provider"),
+  v.description("The SSO provider"),
+);
+
+const UsernameSchema = v.nullish(
+  v.pipe(
+    v.string(),
+    v.trim(),
+    v.nonEmpty(),
+    v.readonly(),
+    v.title("Username"),
+    v.description("Username to use when the provider is `localhost`"),
+  ),
+);
+
+const SignInSchema = v.pipe(
+  v.object({
+    provider: ProviderSchema,
+    username: UsernameSchema,
+  }),
+  v.forward(
+    v.partialCheck(
+      [["provider"], ["username"]],
+      ({ provider, username }) =>
+        provider !== "localhost" || typeof username === "string",
+      "You need to give a username to use the `localhost` provider",
+    ),
+    ["username"],
+  ),
+);
+const SignInData = v.InferOutput<typeof SignInSchema>;
 
 export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
   const [styleProps, _, restProps] = splitProps(
@@ -44,15 +87,41 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
     ["onSubmit"],
   );
 
+  const navigate = useNavigate();
+
   const form = createForm(() => ({
     defaultValues: {
       provider: "",
-    } as Provider,
-    onSubmit({ _value }): void {
+    } as typeof SignInData,
+    onSubmit({ value }): void {
+      const { output, success } = v.safeParse(SignInSchema, value);
+
+      if (!success) {
+        return;
+      }
+
+      const { provider, username } = output;
+
+      signIn(
+        provider === "localhost" && typeof username === "string"
+          ? { username }
+          : provider,
+        {
+          onSuccess(): void {
+            navigate("/");
+          },
+        },
+      );
+    },
+    validators: {
+      onChange: SignInSchema,
     },
   }));
 
-  const opts = ["local"];
+  const showUsername = form.useStore(({ values }) => {
+    const { output } = v.safeParse(SignInSchema, values);
+    return (output as typeof SignInData).provider === "localhost";
+  });
 
   return (
     <form
@@ -67,71 +136,97 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
       <p class="text-2xl font-bold mb-4 text-center">
         Sign In with your school account
       </p>
-      <p class="mb-4 flex justify-center flex-wrap gap-2">
+      <form.Field name="provider" validators={{ onChange: ProviderSchema }}>
+        {(field) => (
+          <>
+            <div class="flex flex-row justify-center items-baseline gap-2">
+              {/* <Label for={field().name}>School:</Label> */}
+              <Label>School:</Label>
+              <Select
+                id={field().name}
+                name={field().name}
+                value={field().state.value}
+                onBlur={field().handleBlur}
+                onInput={(e) => field().handleChange(e.target.value)}
+                onChange={(val) => {
+                  if (val !== null) field().handleChange(val);
+                }}
+                options={PROVIDERS}
+                placeholder="Select a prodiver&hellip;"
+                itemComponent={(props) => (
+                  <SelectItem item={props.item}>
+                    {props.item.rawValue}
+                  </SelectItem>
+                )}
+                required
+              >
+                <SelectTrigger aria-label="Provider" class="w-[180px]">
+                  <SelectValue<string>>
+                    {(state) => state.selectedOption()}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent />
+              </Select>
+            </div>
+            <Show
+              when={field().state.meta.errors.length > 0}
+            >
+              <Callout
+                class="max-w-[96vw] w-11/12 basis-full"
+                variant="error"
+              >
+                <CalloutTitle>Error</CalloutTitle>
+                <CalloutContent>
+                  <ol>
+                    <For each={field().state.meta.errors}>
+                      {(i) => <li>{i?.message}</li>}
+                    </For>
+                  </ol>
+                </CalloutContent>
+              </Callout>
+            </Show>
+          </>
+        )}
+      </form.Field>
+      <Show when={showUsername()}>
         <form.Field
-          name="provider"
-          validators={{
-            onChange: v.pipe(
-              v.string(),
-              v.picklist(
-                opts,
-                "You need to select one of the valid providers!",
-              ),
-              v.title("Provider"),
-              v.description("The SSO provider"),
-            ),
-          }}
+          name="username"
+          validators={{ onChange: UsernameSchema }}
         >
           {(field) => (
-            <>
-              <div class="flex flex-row justify-center items-baseline gap-2">
-                <Label for={field().name}>School:</Label>
-                <Select
+            <TextField
+              validationState={(field().state.meta.errors?.length ?? 0) > 0
+                ? "invalid"
+                : "valid"}
+              value={field().state.value}
+              onBlur={field().handleBlur}
+              onInput={(e) => field().handleChange(e.target.value)}
+              class="grid w-full max-w-sm items-center gap-1.5"
+            >
+              <TextFieldLabel for={field().name}>Username</TextFieldLabel>
+              <Tooltip>
+                <TooltipTrigger
+                  as={TextFieldInput}
+                  type="text"
                   id={field().name}
                   name={field().name}
-                  value={field().state.value}
-                  onBlur={field().handleBlur}
-                  onInput={(e) => field().handleChange(e.target.value)}
-                  onChange={(val) => {
-                    if (val !== null) field().handleChange(val);
-                  }}
-                  options={opts}
-                  placeholder="Select a prodiver&hellip;"
-                  itemComponent={(props) => (
-                    <SelectItem item={props.item}>
-                      {props.item.rawValue}
-                    </SelectItem>
-                  )}
-                >
-                  <SelectTrigger aria-label="Provider" class="w-[180px]">
-                    <SelectValue<string>>
-                      {(state) => state.selectedOption()}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent />
-                </Select>
-              </div>
-              <Show
-                when={field().state.meta.errors.length > 0}
-              >
-                <Callout
-                  class="max-w-[96vw] w-11/12 basis-full"
-                  variant="error"
-                >
-                  <CalloutTitle>Error</CalloutTitle>
-                  <CalloutContent>
+                  placeholder="Username"
+                  autocomplete="username"
+                />
+                <TooltipContent>
+                  <TextFieldErrorMessage>
                     <ol>
                       <For each={field().state.meta.errors}>
                         {(i) => <li>{i?.message}</li>}
                       </For>
                     </ol>
-                  </CalloutContent>
-                </Callout>
-              </Show>
-            </>
+                  </TextFieldErrorMessage>
+                </TooltipContent>
+              </Tooltip>
+            </TextField>
           )}
         </form.Field>
-      </p>
+      </Show>
       <p class="flex m-2 justify-center">
         <form.Subscribe
           selector={(state) => ({

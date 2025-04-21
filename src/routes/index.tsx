@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { JSX } from "solid-js";
+import { type JSX, Show } from "solid-js";
 import { Header } from "../components/Header";
 import { Achievements } from "~/components/Achievements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -34,6 +34,8 @@ import {
   useNavigate,
 } from "@solidjs/router";
 import { getActiveTutors, getClassStats } from "~/lib";
+import { authClient } from "~/lib/auth";
+import { signOut } from "~/lib/sign_in";
 
 export const route = {
   preload(): void {
@@ -44,8 +46,6 @@ export const route = {
 
 export default function Home(): JSX.Element {
   const navigate = useNavigate();
-
-  const signInForm = <SignInForm />;
 
   const classStats = createAsync(() => getClassStats(), { deferStream: true });
   const activeTutors = createAsync(() => getActiveTutors(), {
@@ -76,27 +76,59 @@ export default function Home(): JSX.Element {
         <TabsContent value="about">
           <About onGetStarted={() => navigate("/signin")} />
         </TabsContent>
-        <TabsContent value="account">{signInForm}</TabsContent>
+        <TabsContent value="account">
+          <SessionData />
+        </TabsContent>
       </Tabs>
       <div class="hidden sm:grid grid-flow-row grid-cols-2 md:grid-cols-3">
         <div class="md:col-span-2">
           <About onGetStarted={() => navigate("/signin")} />
         </div>
-        <div>{signInForm}</div>
+        <div>
+          <SessionData />
+        </div>
       </div>
       {
         /*
-      <Resizable orientation="horizontal" class="w-full">
-        <ResizablePanel initialSize={2/3} class="overflow-hidden">
-          <About />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel initialSize={1/3} class="overflow-hidden"></ResizablePanel>
-      </Resizable>
-      */
+                      <Resizable orientation="horizontal" class="w-full">
+                        <ResizablePanel initialSize={2/3} class="overflow-hidden">
+                          <About />
+                        </ResizablePanel>
+                        <ResizableHandle />
+                        <ResizablePanel initialSize={1/3} class="overflow-hidden"></ResizablePanel>
+                      </Resizable>
+                      */
       }
       <Separator />
       <Footer />
     </main>
+  );
+}
+
+function SessionData(): JSX.Element {
+  const session = authClient.useSession();
+  const navigate = useNavigate();
+
+  return (
+    <Show when={session().data} fallback={<SignInForm />}>
+      {(data) => {
+        return (
+          <>
+            <pre>{JSON.stringify(data(), null, 2)}</pre>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                signOut({
+                  onSuccess: () => {
+                    navigate("/");
+                  },
+                })}
+            >
+              Sign Out
+            </Button>
+          </>
+        );
+      }}
+    </Show>
   );
 }

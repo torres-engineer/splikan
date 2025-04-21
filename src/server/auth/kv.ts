@@ -29,7 +29,9 @@ export class AuthKV implements SecondaryStorage {
   }
 
   public async get(key: string): Promise<string | null> {
-    await this.kv.connect();
+    if (!this.kv.isOpen) {
+      await this.kv.connect();
+    }
     return this.kv.get(key);
   }
 
@@ -38,12 +40,16 @@ export class AuthKV implements SecondaryStorage {
     value: string,
     ttl?: number,
   ): Promise<void | null | string> {
-    await this.kv.connect();
+    if (!this.kv.isOpen) {
+      await this.kv.connect();
+    }
     return this.kv.set(key, value, { EX: ttl });
   }
 
   public async delete(key: string): Promise<void | null | string> {
-    await this.kv.connect();
+    if (!this.kv.isOpen) {
+      await this.kv.connect();
+    }
     return this.kv.del(key);
   }
 }

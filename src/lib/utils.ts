@@ -24,3 +24,17 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
+
+export function getLocalIPs(): string[] {
+  const interfaces = Deno.networkInterfaces();
+  const ips = new Set<string>();
+
+  for (const iface of interfaces) {
+    if (!iface.scopeid && iface.family === "IPv4") {
+      ips.add(iface.address);
+    }
+  }
+
+  ips.add("localhost");
+  return Array.from(ips);
+}
