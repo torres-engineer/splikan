@@ -44,7 +44,7 @@ import {
   ComboboxSection,
   ComboboxTrigger,
 } from "./ui/combobox";
-import type { ComboboxRootProps } from "@kobalte/core/combobox";
+import { Label } from "./ui/label";
 
 interface Provider {
   value: string;
@@ -68,6 +68,7 @@ const PROVIDERS: Category[] = [
     options: [],
   },
 ];
+
 const PROVIDERS_VALUES = PROVIDERS.reduce<string[]>(
   (prev, cur) => prev.concat(cur.options.map((x) => x.value)),
   [],
@@ -170,21 +171,53 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
       </p>
       <form.Field name="provider" validators={{ onChange: ProviderSchema }}>
         {(field) => (
-          <>
-            <div class="flex flex-row justify-center items-baseline gap-2">
-              {/* <Label for={field().name}>School:</Label> */}
-              <ProviderComboBox
-                id={field().name}
+          <div class="mb-4 flex justify-center flex-wrap gap-2">
+            <p class="flex flex-row justify-center items-center gap-2">
+              <Label for={field().name}>School:</Label>
+              <Combobox<Provider, Category>
                 name={field().name}
-                value={field().state.value}
+                defaultValue={field().state.value}
                 onBlur={field().handleBlur}
-                onInput={(e) => field().handleChange(e.target.value)}
+                onInputChange={(value: string) => {
+                  if (value === "") {
+                    field().handleChange("");
+                  }
+                }}
                 onChange={(val) => {
                   if (val !== null) field().handleChange(val.value);
                 }}
+                validationState={field().state.meta.errors.length > 0
+                  ? "invalid"
+                  : "valid"}
                 required
-              />
-            </div>
+                options={PROVIDERS}
+                optionValue="value"
+                optionTextValue="label"
+                optionLabel="label"
+                optionDisabled="disabled"
+                optionGroupChildren="options"
+                placeholder="Search for your school&hellip;"
+                itemComponent={(props) => (
+                  <ComboboxItem item={props.item}>
+                    <ComboboxItemLabel>
+                      {props.item.rawValue.label}
+                    </ComboboxItemLabel>
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                )}
+                sectionComponent={(props) => (
+                  <ComboboxSection>
+                    {props.section.rawValue.label}
+                  </ComboboxSection>
+                )}
+              >
+                <ComboboxControl aria-label="Provider">
+                  <ComboboxInput id={field().name} />
+                  <ComboboxTrigger />
+                </ComboboxControl>
+                <ComboboxContent />
+              </Combobox>
+            </p>
             <Show
               when={field().state.meta.errors.length > 0}
             >
@@ -202,7 +235,7 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
                 </CalloutContent>
               </Callout>
             </Show>
-          </>
+          </div>
         )}
       </form.Field>
       <Show when={showUsername()}>
@@ -276,49 +309,5 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
         )}
       </form.Subscribe>
     </form>
-  );
-}
-
-function ProviderComboBox(
-  props: ComboboxRootProps,
-): JSX.Element {
-  const [_, restProps] = splitProps(props, [
-    "options",
-    "optionValue",
-    "optionTextValue",
-    "optionLabel",
-    "optionDisabled",
-    "optionGroupChildren",
-    "placeholder",
-    "itemComponent",
-    "sectionComponent",
-  ]);
-
-  return (
-    <Combobox<Provider, Category>
-      options={PROVIDERS}
-      optionValue="value"
-      optionTextValue="label"
-      optionLabel="label"
-      optionDisabled="disabled"
-      optionGroupChildren="options"
-      placeholder="Search for your school&hellip;"
-      itemComponent={(props) => (
-        <ComboboxItem item={props.item}>
-          <ComboboxItemLabel>{props.item.rawValue.label}</ComboboxItemLabel>
-          <ComboboxItemIndicator />
-        </ComboboxItem>
-      )}
-      sectionComponent={(props) => (
-        <ComboboxSection>{props.section.rawValue.label}</ComboboxSection>
-      )}
-      {...restProps}
-    >
-      <ComboboxControl aria-label="Provider">
-        <ComboboxInput />
-        <ComboboxTrigger />
-      </ComboboxControl>
-      <ComboboxContent />
-    </Combobox>
   );
 }
