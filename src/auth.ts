@@ -25,6 +25,7 @@ import { AuthKV } from "./server/auth/kv.ts";
 import type { RedisClientType } from "redis";
 import { providers } from "./server/auth/providers.ts";
 import { getLocalIPs } from "./lib/utils.ts";
+import { env } from "../deps.ts";
 
 export const auth = betterAuth({
   database: {
@@ -51,7 +52,7 @@ export const auth = betterAuth({
     username({ minUsernameLength: 1 }),
     anonymous(),
   ],
-  trustedOrigins: getLocalIPs().map((x) => `http://${x}:3000`),
+  trustedOrigins: getLocalIPs().map((x) => `http://${x}:${env.PORT ?? 3000}`),
   advanced: { cookiePrefix: "splikan" },
 });
 

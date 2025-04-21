@@ -59,12 +59,21 @@ export async function signIn(
       return data;
     }
   } else if (provider === "anonymous") {
-    await authClient.signIn.anonymous();
+    const { data, error } = await authClient.signIn.anonymous();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
   } else {
-    await authClient.signIn.oauth2({
+    const { error } = await authClient.signIn.oauth2({
       providerId: provider,
       callbackURL: "/",
     });
+    if (error) {
+      throw error;
+    }
   }
 }
 

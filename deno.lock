@@ -23,6 +23,8 @@
     "npm:@tanstack/solid-query@^5.74.4": "5.74.4_solid-js@1.9.5__seroval@1.2.1",
     "npm:@testing-library/jest-dom@^6.6.3": "6.6.3",
     "npm:@testing-library/user-event@^14.6.1": "14.6.1_@testing-library+dom@10.4.0",
+    "npm:@trpc/client@^11.1.0": "11.1.0_@trpc+server@11.1.0__typescript@5.8.3_typescript@5.8.3",
+    "npm:@trpc/server@^11.1.0": "11.1.0_typescript@5.8.3",
     "npm:@vitest/coverage-v8@^3.0.9": "3.1.1_vitest@3.1.1__@vitest+ui@3.1.1___vitest@3.1.1___jsdom@26.1.0__jsdom@26.1.0__vite@6.3.2___picomatch@4.0.2_@vitest+ui@3.1.1__vitest@3.1.1___@vitest+ui@3.1.1___jsdom@26.1.0___vite@6.3.2____picomatch@4.0.2__jsdom@26.1.0_jsdom@26.1.0",
     "npm:@vitest/ui@^3.0.9": "3.1.1_vitest@3.1.1__@vitest+ui@3.1.1__jsdom@26.1.0__vite@6.3.2___picomatch@4.0.2_jsdom@26.1.0",
     "npm:better-auth@^1.2.7": "1.2.7",
@@ -2063,6 +2065,19 @@
       "integrity": "sha512-vq7fv0rnt+QTXgPxr5Hjc210p6YKq2kmdziLgnsZGgLJ9e6VAShx1pACLuRjd/AS/sr7phAR58OIIpf0LlmQNw==",
       "dependencies": [
         "@testing-library/dom"
+      ]
+    },
+    "@trpc/client@11.1.0_@trpc+server@11.1.0__typescript@5.8.3_typescript@5.8.3": {
+      "integrity": "sha512-Q3pL4p7AddxI/ZJTEFo1utKSdasDFjZPECIPsKDkthEt52k530JkYVltTdLkYFKrNWXKKBo8MN7NwchelczoRw==",
+      "dependencies": [
+        "@trpc/server",
+        "typescript"
+      ]
+    },
+    "@trpc/server@11.1.0_typescript@5.8.3": {
+      "integrity": "sha512-uAJ7ikejeujVkf53XFJ/0W8nr7bDjul+Szk5Rsepq97Hb/WS1RkRXdyX4KqAyCE9b1vDFCJVJwSxiIZdRtbTZQ==",
+      "dependencies": [
+        "typescript"
       ]
     },
     "@ts-morph/common@0.19.0": {
@@ -7311,6 +7326,8 @@
         "npm:@tanstack/solid-query@^5.74.4",
         "npm:@testing-library/jest-dom@^6.6.3",
         "npm:@testing-library/user-event@^14.6.1",
+        "npm:@trpc/client@^11.1.0",
+        "npm:@trpc/server@^11.1.0",
         "npm:@vitest/coverage-v8@^3.0.9",
         "npm:@vitest/ui@^3.0.9",
         "npm:better-auth@^1.2.7",

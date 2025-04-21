@@ -18,5 +18,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-export { Buffer } from "node:buffer";
-export { env } from "node:process";
+import { dataRouter } from "./routers/data.ts";
+import { router } from "./utils.ts";
+
+export const appRouter = router({
+  data: dataRouter,
+});
+
+export type AppRouter = typeof appRouter;
+
+//export const createCaller = createCallerFactory(appRouter);
+
+// export const helpers = createServerSideHelpers({
+//   router: appRouter,
+//   ctx: await createContext(),
+// });

@@ -18,5 +18,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-export { Buffer } from "node:buffer";
-export { env } from "node:process";
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { auth } from "../../auth.ts";
+import type { User } from "better-auth";
+
+export async function createContext({
+  req,
+  resHeaders,
+}: FetchCreateContextFnOptions): Promise<
+  {
+    req: Request;
+    resHeaders: Headers;
+    user?: User;
+  }
+> {
+  const session = await auth.api.getSession(req);
+  const user = session?.user;
+  return { req, resHeaders, user };
+}
+
+export type Context = Awaited<ReturnType<typeof createContext>>;

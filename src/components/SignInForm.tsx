@@ -123,7 +123,7 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
     defaultValues: {
       provider: "",
     } as typeof SignInData,
-    onSubmit({ value }): void {
+    async onSubmit({ value }): Promise<void> {
       const { output, success } = v.safeParse(SignInSchema, value);
 
       if (!success) {
@@ -132,16 +132,16 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
 
       const { provider, username } = output;
 
-      signIn(
+      const res = await signIn(
         provider === "username" && typeof username === "string"
           ? { username }
           : provider,
-        {
-          onSuccess(): void {
-            navigate("/");
-          },
-        },
       );
+      if (res === undefined) {
+        return;
+      }
+
+      navigate("/");
     },
     validators: {
       onChange: SignInSchema,

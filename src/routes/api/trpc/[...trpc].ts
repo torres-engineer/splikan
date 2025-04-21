@@ -18,5 +18,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-export { Buffer } from "node:buffer";
-export { env } from "node:process";
+import type { APIEvent } from "@solidjs/start/server";
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { createContext } from "../../../server/trpc/context.ts";
+import { appRouter } from "../../../server/trpc/root.ts";
+
+async function handler(event: APIEvent): Promise<Response> {
+  return await fetchRequestHandler({
+    endpoint: "/api/trpc",
+    req: event.request,
+    router: appRouter,
+    createContext,
+  });
+}
+
+export const GET = handler;
+
+export const POST = handler;
