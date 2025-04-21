@@ -30,7 +30,7 @@ type SignInFetchOptions = SignInUsernameFetchOptions | SignUpEmailFetchOptions;
 type SignOutFetchOptions = Parameters<typeof authClient.signOut>[1];
 
 export async function signIn(
-  provider: Providers | { username: string },
+  provider: Providers | { username: string } | "anonymous",
   fetchOptions: SignInFetchOptions = {},
 ): Promise<{ token: string | null; user: User } | undefined> {
   if (typeof provider !== "string") {
@@ -58,6 +58,8 @@ export async function signIn(
 
       return data;
     }
+  } else if (provider === "anonymous") {
+    await authClient.signIn.anonymous();
   } else {
     await authClient.signIn.oauth2({
       providerId: provider,

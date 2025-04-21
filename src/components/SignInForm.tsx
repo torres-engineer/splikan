@@ -42,7 +42,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { useNavigate } from "@solidjs/router";
 
-const PROVIDERS = ["localhost"];
+const PROVIDERS = ["username", "anonymous"];
 
 const ProviderSchema = v.pipe(
   v.string(),
@@ -59,7 +59,7 @@ const UsernameSchema = v.nullish(
     v.nonEmpty(),
     v.readonly(),
     v.title("Username"),
-    v.description("Username to use when the provider is `localhost`"),
+    v.description("Username to use when the provider is `username`"),
   ),
 );
 
@@ -72,8 +72,8 @@ const SignInSchema = v.pipe(
     v.partialCheck(
       [["provider"], ["username"]],
       ({ provider, username }) =>
-        provider !== "localhost" || typeof username === "string",
-      "You need to give a username to use the `localhost` provider",
+        provider !== "username" || typeof username === "string",
+      "You need to give a username to use the `username` provider",
     ),
     ["username"],
   ),
@@ -103,7 +103,7 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
       const { provider, username } = output;
 
       signIn(
-        provider === "localhost" && typeof username === "string"
+        provider === "username" && typeof username === "string"
           ? { username }
           : provider,
         {
@@ -120,7 +120,7 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
 
   const showUsername = form.useStore(({ values }) => {
     const { output } = v.safeParse(SignInSchema, values);
-    return (output as typeof SignInData).provider === "localhost";
+    return (output as typeof SignInData).provider === "username";
   });
 
   return (
@@ -130,7 +130,10 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
         e.stopPropagation();
         form.handleSubmit();
       }}
-      class={cn("rounded-lg max-w-md w-full p-6 mx-auto", styleProps.style)}
+      class={cn(
+        "flex flex-col gap-4 rounded-lg max-w-md w-full p-6 mx-auto",
+        styleProps.style,
+      )}
       {...restProps}
     >
       <p class="text-2xl font-bold mb-4 text-center">
