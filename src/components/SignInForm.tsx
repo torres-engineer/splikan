@@ -20,14 +20,6 @@
  */
 import { createForm } from "@tanstack/solid-form";
 import * as v from "valibot";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Label } from "./ui/label";
 import { type ComponentProps, For, type JSX, Show, splitProps } from "solid-js";
 import { Callout, CalloutContent, CalloutTitle } from "./ui/callout";
 import { Button } from "./ui/button";
@@ -41,12 +33,49 @@ import {
 } from "./ui/text-field";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { useNavigate } from "@solidjs/router";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxControl,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxItemIndicator,
+  ComboboxItemLabel,
+  ComboboxSection,
+  ComboboxTrigger,
+} from "./ui/combobox";
+import type { ComboboxRootProps } from "@kobalte/core/combobox";
 
-const PROVIDERS = ["username", "anonymous"];
+interface Provider {
+  value: string;
+  label: string;
+  disabled: boolean;
+}
+interface Category {
+  label: string;
+  options: Provider[];
+}
+const PROVIDERS: Category[] = [
+  {
+    label: "Local",
+    options: [
+      { value: "username", label: "Username", disabled: false },
+      { value: "anonymous", label: "Anonymous", disabled: false },
+    ],
+  },
+  {
+    label: "Schools",
+    options: [],
+  },
+];
+const PROVIDERS_VALUES = PROVIDERS.reduce<string[]>(
+  (prev, cur) => prev.concat(cur.options.map((x) => x.value)),
+  [],
+);
 
 const ProviderSchema = v.pipe(
   v.string(),
-  v.picklist(PROVIDERS, "You need to select one of the valid providers"),
+  v.picklist(PROVIDERS_VALUES, "You need to select one of the valid providers"),
   v.readonly(),
   v.title("Provider"),
   v.description("The SSO provider"),
@@ -144,32 +173,17 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
           <>
             <div class="flex flex-row justify-center items-baseline gap-2">
               {/* <Label for={field().name}>School:</Label> */}
-              <Label>School:</Label>
-              <Select
+              <ProviderComboBox
                 id={field().name}
                 name={field().name}
                 value={field().state.value}
                 onBlur={field().handleBlur}
                 onInput={(e) => field().handleChange(e.target.value)}
                 onChange={(val) => {
-                  if (val !== null) field().handleChange(val);
+                  if (val !== null) field().handleChange(val.value);
                 }}
-                options={PROVIDERS}
-                placeholder="Select a prodiver&hellip;"
-                itemComponent={(props) => (
-                  <SelectItem item={props.item}>
-                    {props.item.rawValue}
-                  </SelectItem>
-                )}
                 required
-              >
-                <SelectTrigger aria-label="Provider" class="w-[180px]">
-                  <SelectValue<string>>
-                    {(state) => state.selectedOption()}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent />
-              </Select>
+              />
             </div>
             <Show
               when={field().state.meta.errors.length > 0}
@@ -262,5 +276,49 @@ export default function SignInForm(props: ComponentProps<"form">): JSX.Element {
         )}
       </form.Subscribe>
     </form>
+  );
+}
+
+function ProviderComboBox(
+  props: ComboboxRootProps,
+): JSX.Element {
+  const [_, restProps] = splitProps(props, [
+    "options",
+    "optionValue",
+    "optionTextValue",
+    "optionLabel",
+    "optionDisabled",
+    "optionGroupChildren",
+    "placeholder",
+    "itemComponent",
+    "sectionComponent",
+  ]);
+
+  return (
+    <Combobox<Provider, Category>
+      options={PROVIDERS}
+      optionValue="value"
+      optionTextValue="label"
+      optionLabel="label"
+      optionDisabled="disabled"
+      optionGroupChildren="options"
+      placeholder="Search for your school&hellip;"
+      itemComponent={(props) => (
+        <ComboboxItem item={props.item}>
+          <ComboboxItemLabel>{props.item.rawValue.label}</ComboboxItemLabel>
+          <ComboboxItemIndicator />
+        </ComboboxItem>
+      )}
+      sectionComponent={(props) => (
+        <ComboboxSection>{props.section.rawValue.label}</ComboboxSection>
+      )}
+      {...restProps}
+    >
+      <ComboboxControl aria-label="Provider">
+        <ComboboxInput />
+        <ComboboxTrigger />
+      </ComboboxControl>
+      <ComboboxContent />
+    </Combobox>
   );
 }
