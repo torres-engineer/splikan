@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { type JSX, Show } from "solid-js";
+import { createSignal, type JSX, Show } from "solid-js";
 import { Header } from "../components/Header";
 import { Achievements } from "~/components/Achievements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -27,30 +27,27 @@ import { Separator } from "~/components/ui/separator";
 import { Footer } from "~/components/Footer";
 import SignInForm from "~/components/SignInForm";
 import { Button } from "~/components/ui/button";
-import {
-  A,
-  createAsync,
-  type RouteDefinition,
-  useNavigate,
-} from "@solidjs/router";
-import { getActiveTutors, getClassStats } from "~/lib";
+import { A, type RouteDefinition, useNavigate } from "@solidjs/router";
 import { authClient } from "~/lib/auth";
 import { signOut } from "~/lib/sign_in";
+import { QueryBoundary } from "~/components/QueryBoundary";
+import { getStatsOptions, queryClient } from "~/lib";
+import { useQuery } from "@tanstack/solid-query";
 
 export const route = {
   preload(): void {
-    getClassStats();
-    getActiveTutors();
+    queryClient.prefetchQuery(getStatsOptions);
   },
 } satisfies RouteDefinition;
 
-export default function Home(): JSX.Element {
-  const navigate = useNavigate();
+const SHOW = true;
 
-  const classStats = createAsync(() => getClassStats(), { deferStream: true });
-  const activeTutors = createAsync(() => getActiveTutors(), {
-    deferStream: true,
-  });
+export default function Home(): JSX.Element {
+  const statsQuery = useQuery(() => getStatsOptions);
+
+  const [showAchievements, setShowAchievements] = createSignal(SHOW);
+
+  const navigate = useNavigate();
 
   return (
     <main>
@@ -60,14 +57,40 @@ export default function Home(): JSX.Element {
           Find your perfect tutor!
         </Button>
       </div>
-      <div class="my-2">
-        <Achievements
-          completedClasses={classStats()?.completed_classes ?? 0}
-          studentsTutored={classStats()?.students_tutored ?? 0}
-          activeTutors={activeTutors() ?? 0}
-          hoursOfTutoring={classStats()?.hours_tutored ?? 0}
-        />
-      </div>
+      <Show when={showAchievements()}>
+        <div class="my-2">
+          <h2 class="sr-only">Achievements</h2>
+          <QueryBoundary
+            query={statsQuery}
+            loadingFallback={() => {
+              setShowAchievements(SHOW);
+              return <div>loading achievements&hellip;</div>;
+            }}
+            errorFallback={(err, reset) => {
+              //setShowAchievements(!SHOW);
+              return (
+                <div>
+                  <div class="error">{err.message}</div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await statsQuery.refetch();
+                      reset();
+                    }}
+                  >
+                    retry
+                  </button>
+                </div>
+              );
+            }}
+          >
+            {(stats) => {
+              setShowAchievements(SHOW);
+              return <Achievements {...stats} />;
+            }}
+          </QueryBoundary>
+        </div>
+      </Show>
       <Tabs defaultValue="about" class="w-full sm:hidden">
         <TabsList class="sticky top-0 grid w-full grid-cols-2">
           <TabsTrigger value="about">About</TabsTrigger>
@@ -90,14 +113,14 @@ export default function Home(): JSX.Element {
       </div>
       {
         /*
-                      <Resizable orientation="horizontal" class="w-full">
-                        <ResizablePanel initialSize={2/3} class="overflow-hidden">
-                          <About />
-                        </ResizablePanel>
-                        <ResizableHandle />
-                        <ResizablePanel initialSize={1/3} class="overflow-hidden"></ResizablePanel>
-                      </Resizable>
-                      */
+                                      <Resizable orientation="horizontal" class="w-full">
+                                        <ResizablePanel initialSize={2/3} class="overflow-hidden">
+                                          <About />
+                                        </ResizablePanel>
+                                        <ResizableHandle />
+                                        <ResizablePanel initialSize={1/3} class="overflow-hidden"></ResizablePanel>
+                                      </Resizable>
+                                      */
       }
       <Separator />
       <Footer />
@@ -114,7 +137,6 @@ function SessionData(): JSX.Element {
       {(data) => {
         return (
           <>
-            <pre>{JSON.stringify(data(), null, 2)}</pre>
             <Button
               variant="secondary"
               onClick={() =>
@@ -126,6 +148,7 @@ function SessionData(): JSX.Element {
             >
               Sign Out
             </Button>
+            <pre>{JSON.stringify(data(), null, 2)}</pre>
           </>
         );
       }}

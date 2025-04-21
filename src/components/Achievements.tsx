@@ -57,46 +57,44 @@ const ACHIEVEMENTS: ((props: Props) => JSX.Element)[] = [
 ];
 
 const JUMP = false;
+export const DELAY = 6000;
 
 export function Achievements(props: Props): JSX.Element {
-  const plugin = Autoplay({ delay: 6000, stopOnInteraction: true });
+  const plugin = Autoplay({ delay: DELAY, stopOnInteraction: true });
   return (
-    <>
-      <h2 class="sr-only">Achievements</h2>
-      <Card class="flex flex-col items-center justify-center">
-        <CardHeader>
-          <CardTitle>What have we achieved?</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Carousel
-            class={cn("w-full max-w-xs", "sm:max-w-sm")}
-            opts={{ align: "start", loop: true }}
-            plugins={[plugin]}
-            onMouseEnter={plugin.stop}
-            onMouseLeave={() => plugin.play(JUMP)}
-          >
-            <CarouselContent class="-ml-6 oldstyle-nums max-w-[64dvw]">
-              <For each={ACHIEVEMENTS}>
-                {(achievement) => (
-                  <CarouselItem class="flex items-center justify-center basis-1/1 pl-6">
-                    <div
-                      class={cn(
-                        "my-auto p-1",
-                        "[&>p]:text-center",
-                        "[&>p>span]:font-black",
-                      )}
-                    >
-                      {achievement(props)}
-                    </div>
-                  </CarouselItem>
-                )}
-              </For>
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </CardContent>
-      </Card>
-    </>
+    <Card class="flex flex-col items-center justify-center">
+      <CardHeader>
+        <CardTitle>What have we achieved?</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Carousel
+          class={cn("w-full max-w-xs", "sm:max-w-sm")}
+          opts={{ align: "start", loop: true }}
+          plugins={[plugin]}
+          onMouseEnter={plugin.stop}
+          onMouseLeave={() => plugin.play(JUMP)}
+        >
+          <CarouselContent class="-ml-6 oldstyle-nums max-w-[64dvw]">
+            <For each={ACHIEVEMENTS}>
+              {(achievement) => (
+                <CarouselItem class="flex items-center justify-center basis-1/1 pl-6">
+                  <div
+                    class={cn(
+                      "my-auto p-1",
+                      "[&>p]:text-center",
+                      "[&>p>span]:font-black",
+                    )}
+                  >
+                    {achievement(props)}
+                  </div>
+                </CarouselItem>
+              )}
+            </For>
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </CardContent>
+    </Card>
   );
 }

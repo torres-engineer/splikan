@@ -22,6 +22,8 @@ import { MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { onMount, Suspense } from "solid-js";
+import { SolidQueryDevtools } from "@tanstack/solid-query-devtools";
+import { QueryClientProvider } from "@tanstack/solid-query";
 import "./app.css";
 import type { JSX } from "solid-js";
 import { getCookie } from "vinxi/http";
@@ -31,6 +33,7 @@ import {
   cookieStorageManagerSSR,
 } from "@kobalte/core";
 import { isServer } from "solid-js/web";
+import { queryClient } from "./lib";
 
 const notice = `
 Splikan - S2S (Student-to-Student) peer tutoring made easy!
@@ -73,37 +76,40 @@ export default function App(): JSX.Element {
   });
 
   return (
-    <Router
-      root={(props) => (
-        <MetaProvider>
-          <ColorModeScript storageType={storageManager.type} />
-          <ColorModeProvider storageManager={storageManager}>
-            <Title>Splikan</Title>
-            {
-              /*
+    <QueryClientProvider client={queryClient}>
+      <SolidQueryDevtools />
+      <Router
+        root={(props) => (
+          <MetaProvider>
+            <ColorModeScript storageType={storageManager.type} />
+            <ColorModeProvider storageManager={storageManager}>
+              <Title>Splikan</Title>
+              {
+                /*
           <Meta charset="UTF-8" />
           <Meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover" />
           */
-            }
-            {/* SEO TAGS START */}
-            {/* APPLE TOUCH ICON */}
-            {/* ICON */}
-            {/* MASK-ICON */}
-            {/* THEME-COLOR */}
-            {/* APPLICATION-NAME */}
-            {/* GENERATOR */}
-            {/* OG: */}
-            {/* ACTIVITYPUB & ACTIVITYSTREAMS */}
-            {/* TWITTER: */}
-            {/* DESCRIPTION */}
-            {/* SEO TAGS END */}
-            <Suspense>{props.children}</Suspense>
-            {/* NOSCRIPT */}
-          </ColorModeProvider>
-        </MetaProvider>
-      )}
-    >
-      <FileRoutes />
-    </Router>
+              }
+              {/* SEO TAGS START */}
+              {/* APPLE TOUCH ICON */}
+              {/* ICON */}
+              {/* MASK-ICON */}
+              {/* THEME-COLOR */}
+              {/* APPLICATION-NAME */}
+              {/* GENERATOR */}
+              {/* OG: */}
+              {/* ACTIVITYPUB & ACTIVITYSTREAMS */}
+              {/* TWITTER: */}
+              {/* DESCRIPTION */}
+              {/* SEO TAGS END */}
+              <Suspense>{props.children}</Suspense>
+              {/* NOSCRIPT */}
+            </ColorModeProvider>
+          </MetaProvider>
+        )}
+      >
+        <FileRoutes />
+      </Router>
+    </QueryClientProvider>
   );
 }

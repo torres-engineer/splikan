@@ -18,42 +18,47 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { query } from "@solidjs/router";
+import { QueryClient, queryOptions } from "@tanstack/solid-query";
 import { sql } from "kysely";
-import { db } from "~/server/db";
+import type { Props as AchievementsProps } from "../components/Achievements.tsx";
+import { db } from "../server/db.ts";
 
-export const getClassStats = query(() => {
+export const queryClient = new QueryClient({
+  defaultOptions: { queries: { experimental_prefetchInRender: true } },
+});
+
+function getStats(): Promise<AchievementsProps> {
   "use server";
   const now = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   return db
-    .selectFrom("class")
+    .selectFrom(["class", "tutor"])
     .innerJoin("student_class", "student_class.class_id", "class.id")
     .select([
       sql<number>`COUNT(DISTINCT class.id)`.as("completed_classes"),
+      sql<number>`COUNT(DISTINCT tutor.id)`.as("active_tutors"),
       sql<number>`COUNT(DISTINCT student_class.student_id)`.as(
         "students_tutored",
       ),
-      sql<number>`SUM(DISTINCT (julianday("to") - julianday("from")) * 24)`.as(
-        "hours_tutored",
-      ),
+      sql<number>`SUM(DISTINCT (julianday("to") - julianday("from")) * 24)`
+        .as(
+          "hours_of_tutoring",
+        ),
     ])
     .where("class.accepted", "=", 1)
     .where("class.to", "<", now)
+    .where("tutor.pause", "=", 0)
     .executeTakeFirst()
     .then((x) => ({
-      completed_classes: x?.completed_classes ?? 0,
-      students_tutored: x?.students_tutored ?? 0,
-      hours_tutored: Math.round(x?.hours_tutored ?? 0),
+      completedClasses: x?.completed_classes ?? 0,
+      studentsTutored: x?.students_tutored ?? 0,
+      activeTutors: x?.active_tutors ?? 0,
+      hoursOfTutoring: Math.round(x?.hours_of_tutoring ?? 0),
     }));
-}, "class-stats");
-
-export const getActiveTutors = query((): Promise<number> => {
-  "use server";
-
-  return db.selectFrom("tutor")
-    .select(({ fn }) => [fn.count<number>("id").as("count")])
-    .where("pause", "=", 0)
-    .executeTakeFirst()
-    .then((x) => x?.count ?? 0);
-}, "active-tutors");
+}
+export const getStatsOptions = queryOptions({
+  queryKey: ["stats"],
+  queryFn: getStats,
+  deferStream: true,
+  throwOnError: true,
+});
