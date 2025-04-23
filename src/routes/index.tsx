@@ -34,6 +34,11 @@ import { QueryBoundary } from "~/components/QueryBoundary";
 import { getStatsOptions } from "~/lib";
 import { useQuery } from "@tanstack/solid-query";
 import { queryClient } from "~/lib/trpc";
+import {
+  Resizable,
+  ResizableHandle,
+  ResizablePanel,
+} from "~/components/ui/resizable";
 
 export const route = {
   preload(): void {
@@ -88,25 +93,15 @@ export default function Home(): JSX.Element {
           <SessionData />
         </TabsContent>
       </Tabs>
-      <div class="hidden sm:grid grid-flow-row grid-cols-2 md:grid-cols-3">
-        <div class="md:col-span-2">
+      <Resizable orientation="horizontal" class="!hidden !sm:flex w-full">
+        <ResizablePanel initialSize={2 / 3} class="overflow-hidden">
           <About onGetStarted={() => navigate("/signin")} />
-        </div>
-        <div>
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel initialSize={1 / 3} class="overflow-hidden">
           <SessionData />
-        </div>
-      </div>
-      {
-        /*
-                                      <Resizable orientation="horizontal" class="w-full">
-                                        <ResizablePanel initialSize={2/3} class="overflow-hidden">
-                                          <About />
-                                        </ResizablePanel>
-                                        <ResizableHandle />
-                                        <ResizablePanel initialSize={1/3} class="overflow-hidden"></ResizablePanel>
-                                      </Resizable>
-                                      */
-      }
+        </ResizablePanel>
+      </Resizable>
       <Separator />
       <Footer />
     </main>
