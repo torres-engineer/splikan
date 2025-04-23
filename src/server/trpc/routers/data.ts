@@ -26,33 +26,37 @@ import * as v from "valibot";
 export const dataRouter = router({
   getStats: procedure
     .output(v.object({
-      completed_classes: v.pipe(v.number(), v.integer(), v.minValue(0)),
-      students_tutored: v.pipe(v.number(), v.integer(), v.minValue(0)),
-      hours_tutored: v.pipe(v.number(), v.integer(), v.minValue(0)),
+      completedClasses: v.pipe(v.number(), v.integer(), v.minValue(0)),
+      studentsTutored: v.pipe(v.number(), v.integer(), v.minValue(0)),
+      activeTutors: v.pipe(v.number(), v.integer(), v.minValue(0)),
+      hoursOfTutoring: v.pipe(v.number(), v.integer(), v.minValue(0)),
     }))
     .query(async () => {
       const now = new Date().toISOString().slice(0, 19).replace("T", " ");
 
       return await db
-        .selectFrom("class")
+        .selectFrom(["class", "tutor"])
         .innerJoin("student_class", "student_class.class_id", "class.id")
         .select([
           sql<number>`COUNT(DISTINCT class.id)`.as("completed_classes"),
+          sql<number>`COUNT(DISTINCT tutor.id)`.as("active_tutors"),
           sql<number>`COUNT(DISTINCT student_class.student_id)`.as(
             "students_tutored",
           ),
           sql<number>`SUM(DISTINCT (julianday("to") - julianday("from")) * 24)`
             .as(
-              "hours_tutored",
+              "hours_of_tutoring",
             ),
         ])
         .where("class.accepted", "=", 1)
         .where("class.to", "<", now)
+        .where("tutor.pause", "=", 0)
         .executeTakeFirst()
         .then((x) => ({
-          completed_classes: x?.completed_classes ?? 0,
-          students_tutored: x?.students_tutored ?? 0,
-          hours_tutored: Math.round(x?.hours_tutored ?? 0),
+          completedClasses: x?.completed_classes ?? 0,
+          studentsTutored: x?.students_tutored ?? 0,
+          activeTutors: x?.active_tutors ?? 0,
+          hoursOfTutoring: Math.round(x?.hours_of_tutoring ?? 0),
         }));
     }),
 });

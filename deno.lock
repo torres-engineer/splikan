@@ -30,6 +30,7 @@
     "npm:better-auth@^1.2.7": "1.2.7",
     "npm:class-variance-authority@~0.7.1": "0.7.1",
     "npm:clsx@^2.1.1": "2.1.1",
+    "npm:devalue@^5.1.1": "5.1.1",
     "npm:embla-carousel-autoplay@^8.5.2": "8.6.0_embla-carousel@8.6.0",
     "npm:embla-carousel-solid@^8.5.2": "8.6.0_solid-js@1.9.5__seroval@1.2.1_embla-carousel@8.6.0",
     "npm:jsdom@26": "26.1.0",
@@ -44,6 +45,7 @@
     "npm:solid-js@*": "1.9.5_seroval@1.2.1",
     "npm:solid-js@^1.9.2": "1.9.5_seroval@1.2.1",
     "npm:solidui-cli@latest": "0.7.1_@babel+core@7.26.10",
+    "npm:superjson@^2.2.2": "2.2.2",
     "npm:tailwind-merge@^3.1.0": "3.2.0",
     "npm:tailwindcss-animate@^1.0.7": "1.0.7_tailwindcss@4.1.4",
     "npm:tailwindcss@^4.0.15": "4.1.4",
@@ -3179,6 +3181,12 @@
     "cookie@1.0.2": {
       "integrity": "sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA=="
     },
+    "copy-anything@3.0.5": {
+      "integrity": "sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==",
+      "dependencies": [
+        "is-what"
+      ]
+    },
     "core-util-is@1.0.3": {
       "integrity": "sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ=="
     },
@@ -3418,6 +3426,9 @@
         "node-source-walk",
         "typescript"
       ]
+    },
+    "devalue@5.1.1": {
+      "integrity": "sha512-maua5KUiapvEwiEAe+XnlZ3Rh0GD+qI1J/nb9vrJc3muPXvcF/8gXYTWF76+5DAqHyDUtOIImEuo0YKE9mshVw=="
     },
     "devlop@1.1.0": {
       "integrity": "sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==",
@@ -6454,6 +6465,12 @@
         "js-tokens@9.0.1"
       ]
     },
+    "superjson@2.2.2": {
+      "integrity": "sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==",
+      "dependencies": [
+        "copy-anything"
+      ]
+    },
     "supports-color@10.0.0": {
       "integrity": "sha512-HRVVSbCCMbj7/kdWF9Q+bbckjBHLtHMEoJWlkmYzzdwhYMkjkOwubLM6t7NbWKjgKamGDrWL1++KrjUO1t9oAQ=="
     },
@@ -7333,6 +7350,7 @@
         "npm:better-auth@^1.2.7",
         "npm:class-variance-authority@~0.7.1",
         "npm:clsx@^2.1.1",
+        "npm:devalue@^5.1.1",
         "npm:embla-carousel-autoplay@^8.5.2",
         "npm:embla-carousel-solid@^8.5.2",
         "npm:jsdom@26",
@@ -7342,6 +7360,7 @@
         "npm:nitropack@^2.11.9",
         "npm:redis@^4.7.0",
         "npm:solid-js@^1.9.2",
+        "npm:superjson@^2.2.2",
         "npm:tailwind-merge@^3.1.0",
         "npm:tailwindcss-animate@^1.0.7",
         "npm:tailwindcss@^4.0.15",

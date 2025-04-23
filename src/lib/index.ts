@@ -19,42 +19,15 @@
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { QueryClient, queryOptions } from "@tanstack/solid-query";
-import { sql } from "kysely";
 import type { Props as AchievementsProps } from "../components/Achievements.tsx";
-import { db } from "../server/db.ts";
+import { api } from "./trpc.ts";
 
 export const queryClient = new QueryClient({
   defaultOptions: { queries: { experimental_prefetchInRender: true } },
 });
 
 function getStats(): Promise<AchievementsProps> {
-  "use server";
-  const now = new Date().toISOString().slice(0, 19).replace("T", " ");
-
-  return db
-    .selectFrom(["class", "tutor"])
-    .innerJoin("student_class", "student_class.class_id", "class.id")
-    .select([
-      sql<number>`COUNT(DISTINCT class.id)`.as("completed_classes"),
-      sql<number>`COUNT(DISTINCT tutor.id)`.as("active_tutors"),
-      sql<number>`COUNT(DISTINCT student_class.student_id)`.as(
-        "students_tutored",
-      ),
-      sql<number>`SUM(DISTINCT (julianday("to") - julianday("from")) * 24)`
-        .as(
-          "hours_of_tutoring",
-        ),
-    ])
-    .where("class.accepted", "=", 1)
-    .where("class.to", "<", now)
-    .where("tutor.pause", "=", 0)
-    .executeTakeFirst()
-    .then((x) => ({
-      completedClasses: x?.completed_classes ?? 0,
-      studentsTutored: x?.students_tutored ?? 0,
-      activeTutors: x?.active_tutors ?? 0,
-      hoursOfTutoring: Math.round(x?.hours_of_tutoring ?? 0),
-    }));
+  return api.data.getStats.query();
 }
 export const getStatsOptions = queryOptions({
   queryKey: ["stats"],
