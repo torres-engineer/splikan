@@ -33,7 +33,7 @@ import {
   cookieStorageManagerSSR,
 } from "@kobalte/core";
 import { isServer } from "solid-js/web";
-import { queryClient } from "./lib";
+import { queryClient } from "./lib/trpc";
 
 const notice = `
 Splikan - S2S (Student-to-Student) peer tutoring made easy!

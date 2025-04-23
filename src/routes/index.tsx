@@ -31,8 +31,9 @@ import { A, type RouteDefinition, useNavigate } from "@solidjs/router";
 import { authClient } from "~/lib/auth";
 import { signOut } from "~/lib/sign_in";
 import { QueryBoundary } from "~/components/QueryBoundary";
-import { getStatsOptions, queryClient } from "~/lib";
+import { getStatsOptions } from "~/lib";
 import { useQuery } from "@tanstack/solid-query";
+import { queryClient } from "~/lib/trpc";
 
 export const route = {
   preload(): void {

@@ -18,20 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { QueryClient, queryOptions } from "@tanstack/solid-query";
-import type { Props as AchievementsProps } from "../components/Achievements.tsx";
-import { api } from "./trpc.ts";
+import { trpc } from "./trpc.ts";
 
-export const queryClient = new QueryClient({
-  defaultOptions: { queries: { experimental_prefetchInRender: true } },
-});
-
-function getStats(): Promise<AchievementsProps> {
-  return api.data.getStats.query();
-}
-export const getStatsOptions = queryOptions({
-  queryKey: ["stats"],
-  queryFn: getStats,
-  deferStream: true,
-  throwOnError: true,
-});
+export const getStatsOptions = trpc.data.getStats.queryOptions();

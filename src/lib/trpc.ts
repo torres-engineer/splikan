@@ -30,7 +30,14 @@ import { uneval } from "devalue";
 import { default as superjson } from "superjson";
 import type { AppRouter } from "../server/trpc/root.ts";
 import type { TRPCCombinedDataTransformer } from "@trpc/server";
+import { createTRPCContext } from "@trpc/tanstack-react-query";
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { QueryClient } from "@tanstack/solid-query";
 //import { env } from "../../deps.ts";
+
+export const queryClient = new QueryClient({
+  defaultOptions: { queries: { experimental_prefetchInRender: true } },
+});
 
 function getBaseUrl(): string {
   if (typeof globalThis.window !== "undefined") return "";
@@ -60,4 +67,13 @@ export const api = createTRPCClient<AppRouter>({
       false: httpBatchLink({ url, transformer }),
     }),
   ],
+});
+
+export const { TRPCProvider, useTRPC, useTRPCClient } = createTRPCContext<
+  AppRouter
+>();
+
+export const trpc = createTRPCOptionsProxy<AppRouter>({
+  client: api,
+  queryClient,
 });
