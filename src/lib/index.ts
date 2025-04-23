@@ -21,3 +21,5 @@
 import { trpc } from "./trpc.ts";
 
 export const getStatsOptions = trpc.data.getStats.queryOptions();
+export const getCurrentStudentsOptions = trpc.student.getStudents
+  .queryOptions();

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { createSignal, type JSX, Show, Suspense } from "solid-js";
+import { createSignal, For, type JSX, Show } from "solid-js";
 import { Header } from "../components/Header";
 import { Achievements } from "~/components/Achievements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -31,7 +31,7 @@ import { A, type RouteDefinition, useNavigate } from "@solidjs/router";
 import { authClient } from "~/lib/auth";
 import { signOut } from "~/lib/sign_in";
 import { QueryBoundary } from "~/components/QueryBoundary";
-import { getStatsOptions } from "~/lib";
+import { getCurrentStudentsOptions, getStatsOptions } from "~/lib";
 import { useQuery } from "@tanstack/solid-query";
 import { queryClient } from "~/lib/trpc";
 import {
@@ -54,6 +54,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 export const route = {
   preload(): void {
     queryClient.prefetchQuery(getStatsOptions);
+    queryClient.prefetchQuery(getCurrentStudentsOptions);
   },
 } satisfies RouteDefinition;
 
@@ -65,6 +66,8 @@ export default function Home(): JSX.Element {
   const [showAchievements, setShowAchievements] = createSignal(SHOW);
 
   const navigate = useNavigate();
+
+  const sessionData = <SessionData />;
 
   return (
     <main>
@@ -101,16 +104,16 @@ export default function Home(): JSX.Element {
           <About onGetStarted={() => navigate("/signin")} />
         </TabsContent>
         <TabsContent value="account">
-          <SessionData />
+          {sessionData}
         </TabsContent>
       </Tabs>
-      <Resizable orientation="horizontal" class="!hidden !sm:flex w-full">
+      <Resizable orientation="horizontal" class="!hidden sm:!flex w-full">
         <ResizablePanel initialSize={2 / 3} class="overflow-hidden">
           <About onGetStarted={() => navigate("/signin")} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel initialSize={1 / 3} class="overflow-hidden">
-          <SessionData />
+          {sessionData}
         </ResizablePanel>
       </Resizable>
       <Separator />
@@ -121,22 +124,24 @@ export default function Home(): JSX.Element {
 
 function SessionData(): JSX.Element {
   const session = authClient.useSession();
+  const currentStudentsQuery = useQuery(() => getCurrentStudentsOptions);
   const navigate = useNavigate();
 
   return (
-    <Show when={session().data} fallback={<SignInForm />}>
-      {(data) => {
-        const user = () => data().user;
-        const image = () => user().image ?? undefined;
-        const initials = () => user().name.split(/\s+/).map((x) => x.charAt(0));
-        const imageFallback = () =>
-          initials().length > 1
-            ? `${initials()[0]}${initials()[initials().length - 1]}`
-            : initials()[0];
+    <Show when={!session().isPending} fallback={<Skeleton />}>
+      <Show when={session().data} fallback={<SignInForm />}>
+        {(data) => {
+          const user = () => data().user;
+          const image = () => user().image ?? undefined;
+          const initials = () =>
+            user().name.split(/\s+/).map((x) => x.charAt(0));
+          const imageFallback = () =>
+            initials().length > 1
+              ? `${initials()[0]}${initials()[initials().length - 1]}`
+              : initials()[0];
 
-        return (
-          <Suspense fallback={<Skeleton />}>
-            <Card>
+          return (
+            <Card class="ml-2 h-full">
               <CardHeader>
                 <CardTitle>
                   Welcome{" "}
@@ -156,6 +161,15 @@ function SessionData(): JSX.Element {
                   <AvatarImage src={image()} />
                   <AvatarFallback>{imageFallback()}</AvatarFallback>
                 </Avatar>
+                <QueryBoundary query={currentStudentsQuery}>
+                  {(students) => (
+                    <For each={students}>
+                      {(student) => (
+                        <pre>{JSON.stringify(student, null, 2)}</pre>
+                      )}
+                    </For>
+                  )}
+                </QueryBoundary>
               </CardContent>
               <CardFooter>
                 <Button
@@ -171,9 +185,9 @@ function SessionData(): JSX.Element {
                 </Button>
               </CardFooter>
             </Card>
-          </Suspense>
-        );
-      }}
+          );
+        }}
+      </Show>
     </Show>
   );
 }

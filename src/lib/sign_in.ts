@@ -20,6 +20,7 @@
  */
 import type { User } from "better-auth";
 import { authClient } from "./auth.ts";
+import { queryClient, trpc } from "./trpc.ts";
 
 type Providers = Parameters<typeof authClient.signIn.oauth2>[0]["providerId"];
 type SignInUsernameFetchOptions = Parameters<
@@ -41,6 +42,8 @@ export async function signIn(
     }, fetchOptions);
 
     if (error === null) {
+      queryClient.invalidateQueries({ queryKey: trpc.student.pathKey() });
+
       return data;
     }
 
@@ -56,6 +59,8 @@ export async function signIn(
         throw error;
       }
 
+      queryClient.invalidateQueries({ queryKey: trpc.student.pathKey() });
+
       return data;
     }
   } else if (provider === "anonymous") {
@@ -64,6 +69,7 @@ export async function signIn(
     if (error) {
       throw error;
     }
+    queryClient.invalidateQueries({ queryKey: trpc.student.pathKey() });
 
     return data;
   } else {
@@ -74,6 +80,8 @@ export async function signIn(
     if (error) {
       throw error;
     }
+
+    queryClient.invalidateQueries({ queryKey: trpc.student.pathKey() });
   }
 }
 
@@ -85,6 +93,8 @@ export async function signOut(
   if (error !== null) {
     throw error;
   }
+
+  queryClient.invalidateQueries({ queryKey: trpc.student.pathKey() });
 
   return data.success;
 }

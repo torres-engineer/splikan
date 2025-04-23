@@ -34,7 +34,7 @@ export interface Props {
   completedClasses: number;
   studentsTutored: number;
   activeTutors: number;
-  hoursOfTutoring: number;
+  minutesOfTutoring: number;
 }
 
 const ACHIEVEMENTS: ((props: Props) => JSX.Element)[] = [
@@ -49,11 +49,20 @@ const ACHIEVEMENTS: ((props: Props) => JSX.Element)[] = [
       <span>{activeTutors}</span> active tutors
     </p>
   ),
-  ({ hoursOfTutoring }: Props) => (
-    <p>
-      <span>{hoursOfTutoring}</span> hours of tutoring done
-    </p>
-  ),
+  ({ minutesOfTutoring }: Props) => {
+    const hours = Math.floor(minutesOfTutoring / 60);
+    const minutes = minutesOfTutoring % 60;
+    const duration = new Intl.DurationFormat("en", { style: "long" }).format({
+      hours,
+      minutes,
+    });
+    return (
+      <p>
+        <span>{duration.length > 0 ? duration : "0 minutes"}</span>{"  "}
+        of tutoring done
+      </p>
+    );
+  },
 ];
 
 const JUMP = false;

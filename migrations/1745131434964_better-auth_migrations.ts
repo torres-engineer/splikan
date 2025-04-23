@@ -19,9 +19,52 @@
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { type Kysely, sql } from "kysely";
+
 import type { DB as InitialDB } from "./1743126287135_initial.ts";
-import type { DB } from "kysely-codegen";
-export type { DB };
+
+export interface Account {
+  accessToken: string | null;
+  accessTokenExpiresAt: string | null;
+  accountId: string;
+  createdAt: string;
+  id: string;
+  idToken: string | null;
+  password: string | null;
+  providerId: string;
+  refreshToken: string | null;
+  refreshTokenExpiresAt: string | null;
+  scope: string | null;
+  updatedAt: string;
+  userId: string;
+}
+
+export interface User {
+  createdAt: string;
+  displayUsername: string | null;
+  email: string;
+  emailVerified: number;
+  id: string;
+  image: string | null;
+  isAnonymous: number | null;
+  name: string;
+  updatedAt: string;
+  username: string | null;
+}
+
+export interface Verification {
+  createdAt: string | null;
+  expiresAt: string;
+  id: string;
+  identifier: string;
+  updatedAt: string | null;
+  value: string;
+}
+
+export interface DB extends InitialDB {
+  account: Account;
+  user: User;
+  verification: Verification;
+}
 
 const migrationFile = "better-auth_migrations/2025-04-21T01-12-43.027Z.sql";
 export async function up(db: Kysely<InitialDB>): Promise<void> {
@@ -35,6 +78,5 @@ export async function up(db: Kysely<InitialDB>): Promise<void> {
 export async function down(db: Kysely<DB>): Promise<void> {
   await db.schema.dropTable("verification").execute();
   await db.schema.dropTable("account").execute();
-  await db.schema.dropTable("session").execute();
   await db.schema.dropTable("user").execute();
 }

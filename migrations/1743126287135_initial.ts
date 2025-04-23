@@ -75,11 +75,8 @@ export interface School {
 export interface Student {
   hash: string;
   id: Generated<number | null>;
-  name: string;
-  "profile_pic": Buffer | null;
   "school_id": number;
   "student_id": string;
-  "updated_at": Generated<string>;
 }
 
 export interface StudentClass {
@@ -201,13 +198,6 @@ export async function up(db: Kysely<InitialDB>): Promise<void> {
       "school_id",
       "integer",
       (col) => col.notNull().references("school.id").onDelete("cascade"),
-    )
-    .addColumn("name", "text", (col) => col.notNull())
-    .addColumn("profile_pic", "blob")
-    .addColumn(
-      "updated_at",
-      "datetime",
-      (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
     .addUniqueConstraint("unique_school_student", ["student_id", "school_id"])
     .execute();

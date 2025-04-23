@@ -18,20 +18,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { dataRouter } from "./routers/data.ts";
-import { studentRouter } from "./routers/student.ts";
-import { router } from "./utils.ts";
+import { db } from "../../db.ts";
+import { procedure, router } from "../utils.ts";
 
-export const appRouter = router({
-  data: dataRouter,
-  student: studentRouter,
+export const studentRouter = router({
+  getStudents: procedure
+    .query(async ({ ctx }) =>
+      ctx.user === undefined ? [] : await db.selectFrom(["student"]).innerJoin(
+        "account",
+        "account.id",
+        "student.account_id",
+      ).innerJoin("user", "user.id", "account.userId").where(
+        "user.id",
+        "=",
+        ctx.user.id,
+      ).selectAll("student").execute()
+    ),
 });
-
-export type AppRouter = typeof appRouter;
-
-//export const createCaller = createCallerFactory(appRouter);
-
-// export const helpers = createServerSideHelpers({
-//   router: appRouter,
-//   ctx: await createContext(),
-// });

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { betterAuth } from "better-auth";
+import { type Account, betterAuth } from "better-auth";
 import { anonymous, genericOAuth, username } from "better-auth/plugins";
 import { authKV, db } from "./server/db.ts";
 import { AuthKV } from "./server/auth/kv.ts";
@@ -26,6 +26,8 @@ import type { RedisClientType } from "redis";
 import { providers } from "./server/auth/providers.ts";
 import { getLocalIPs } from "./lib/utils.ts";
 import { env } from "../deps.ts";
+import { ulid } from "ulid";
+import { APIError } from "better-call";
 
 export const auth = betterAuth({
   database: {
@@ -42,7 +44,14 @@ export const auth = betterAuth({
       },
     },
   },
-  databaseHooks: {},
+  account: {
+    accountLinking: {
+      enabled: true,
+      allowDifferentEmails: true,
+    },
+  },
+  databaseHooks: { account: { create: { after: afterCreateAccount } } },
+  hooks: {},
   emailAndPassword: {
     enabled: Deno.env.get("NODE_ENV") !== "production",
     minPasswordLength: 1,
@@ -57,3 +66,40 @@ export const auth = betterAuth({
 });
 
 export type Session = typeof auth.$Infer.Session;
+
+async function afterCreateAccount(account: Account): Promise<void> {
+  const user = await db.selectFrom("user")
+    .selectAll()
+    .innerJoin("account", "account.userId", "user.id")
+    .where("account.id", "=", account.id)
+    .executeTakeFirstOrThrow();
+
+  const [studentId, schoolDomain] = user.email.split("@");
+
+  let schoolId = await db.selectFrom("school")
+    .select("id")
+    .where("domain", "=", schoolDomain)
+    .executeTakeFirst().then((x) => x?.id);
+
+  if (typeof schoolId !== "number") {
+    schoolId = await db.insertInto("school")
+      .values({ domain: schoolDomain })
+      .returning("id as id")
+      .executeTakeFirstOrThrow().then((x) => x.id);
+  }
+
+  if (typeof schoolId !== "number") {
+    throw new APIError("INTERNAL_SERVER_ERROR", {
+      message: "Error while creating your student",
+    });
+  }
+
+  await db.insertInto("student")
+    .values({
+      hash: ulid(),
+      student_id: studentId,
+      school_id: schoolId,
+      account_id: account.id,
+    })
+    .executeTakeFirstOrThrow();
+}

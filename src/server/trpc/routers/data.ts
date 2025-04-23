@@ -29,7 +29,7 @@ export const dataRouter = router({
       completedClasses: v.pipe(v.number(), v.integer(), v.minValue(0)),
       studentsTutored: v.pipe(v.number(), v.integer(), v.minValue(0)),
       activeTutors: v.pipe(v.number(), v.integer(), v.minValue(0)),
-      hoursOfTutoring: v.pipe(v.number(), v.integer(), v.minValue(0)),
+      minutesOfTutoring: v.pipe(v.number(), v.integer(), v.minValue(0)),
     }))
     .query(async () => {
       const now = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -43,9 +43,11 @@ export const dataRouter = router({
           sql<number>`COUNT(DISTINCT student_class.student_id)`.as(
             "students_tutored",
           ),
-          sql<number>`SUM(DISTINCT (julianday("to") - julianday("from")) * 24)`
+          sql<
+            number
+          >`SUM(DISTINCT (julianday("to") - julianday("from")) * 24 * 60)`
             .as(
-              "hours_of_tutoring",
+              "minutes_of_tutoring",
             ),
         ])
         .where("class.accepted", "=", 1)
@@ -56,7 +58,7 @@ export const dataRouter = router({
           completedClasses: x?.completed_classes ?? 0,
           studentsTutored: x?.students_tutored ?? 0,
           activeTutors: x?.active_tutors ?? 0,
-          hoursOfTutoring: Math.round(x?.hours_of_tutoring ?? 0),
+          minutesOfTutoring: Math.round(x?.minutes_of_tutoring ?? 0),
         }));
     }),
 });

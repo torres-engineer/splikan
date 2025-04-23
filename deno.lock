@@ -29,6 +29,7 @@
     "npm:@vitest/coverage-v8@^3.0.9": "3.1.1_vitest@3.1.1__@vitest+ui@3.1.1___vitest@3.1.1___jsdom@26.1.0__jsdom@26.1.0__vite@6.3.2___picomatch@4.0.2_@vitest+ui@3.1.1__vitest@3.1.1___@vitest+ui@3.1.1___jsdom@26.1.0___vite@6.3.2____picomatch@4.0.2__jsdom@26.1.0_jsdom@26.1.0",
     "npm:@vitest/ui@^3.0.9": "3.1.1_vitest@3.1.1__@vitest+ui@3.1.1__jsdom@26.1.0__vite@6.3.2___picomatch@4.0.2_jsdom@26.1.0",
     "npm:better-auth@^1.2.7": "1.2.7",
+    "npm:better-call@^1.0.8": "1.0.8",
     "npm:class-variance-authority@~0.7.1": "0.7.1",
     "npm:clsx@^2.1.1": "2.1.1",
     "npm:devalue@^5.1.1": "5.1.1",
@@ -50,6 +51,7 @@
     "npm:tailwind-merge@^3.1.0": "3.2.0",
     "npm:tailwindcss-animate@^1.0.7": "1.0.7_tailwindcss@4.1.4",
     "npm:tailwindcss@^4.0.15": "4.1.4",
+    "npm:ulid@3": "3.0.0",
     "npm:valibot@1": "1.0.0",
     "npm:vinxi@0.5.4": "0.5.4_@babel+core@7.26.10",
     "npm:vinxi@~0.5.3": "0.5.4_@babel+core@7.26.10",
@@ -6755,6 +6757,9 @@
     "ufo@1.6.1": {
       "integrity": "sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA=="
     },
+    "ulid@3.0.0": {
+      "integrity": "sha512-yvZYdXInnJve6LdlPIuYmURdS2NP41ZoF4QW7SXwbUKYt53+0eDAySO+rGSvM2O/ciuB/G+8N7GQrZ1mCJpuqw=="
+    },
     "ultrahtml@1.6.0": {
       "integrity": "sha512-R9fBn90VTJrqqLDwyMph+HGne8eqY1iPfYhPzZrvKpIfwkWZbcYlfpsb8B9dTvBfpy1/hqAD7Wi8EKfP9e8zdw=="
     },
@@ -7381,6 +7386,7 @@
         "npm:@vitest/coverage-v8@^3.0.9",
         "npm:@vitest/ui@^3.0.9",
         "npm:better-auth@^1.2.7",
+        "npm:better-call@^1.0.8",
         "npm:class-variance-authority@~0.7.1",
         "npm:clsx@^2.1.1",
         "npm:devalue@^5.1.1",
@@ -7397,6 +7403,7 @@
         "npm:tailwind-merge@^3.1.0",
         "npm:tailwindcss-animate@^1.0.7",
         "npm:tailwindcss@^4.0.15",
+        "npm:ulid@3",
         "npm:valibot@1",
         "npm:vinxi@~0.5.3",
         "npm:vite-plugin-inspect@11",
