@@ -66,23 +66,7 @@ export default function Home(): JSX.Element {
               setShowAchievements(SHOW);
               return <div>loading achievements&hellip;</div>;
             }}
-            errorFallback={(err, reset) => {
-              //setShowAchievements(!SHOW);
-              return (
-                <div>
-                  <div class="error">{err.message}</div>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      await statsQuery.refetch();
-                      reset();
-                    }}
-                  >
-                    retry
-                  </button>
-                </div>
-              );
-            }}
+            errorFallback={() => setShowAchievements(!SHOW)}
           >
             {(stats) => {
               setShowAchievements(SHOW);
