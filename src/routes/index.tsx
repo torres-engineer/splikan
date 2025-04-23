@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { createSignal, type JSX, Show } from "solid-js";
+import { createSignal, type JSX, Show, Suspense } from "solid-js";
 import { Header } from "../components/Header";
 import { Achievements } from "~/components/Achievements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -39,6 +39,17 @@ import {
   ResizableHandle,
   ResizablePanel,
 } from "~/components/ui/resizable";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export const route = {
   preload(): void {
@@ -70,7 +81,7 @@ export default function Home(): JSX.Element {
             query={statsQuery}
             loadingFallback={() => {
               setShowAchievements(SHOW);
-              return <div>loading achievements&hellip;</div>;
+              return <Skeleton />;
             }}
             errorFallback={() => setShowAchievements(!SHOW)}
           >
@@ -115,21 +126,52 @@ function SessionData(): JSX.Element {
   return (
     <Show when={session().data} fallback={<SignInForm />}>
       {(data) => {
+        const user = () => data().user;
+        const image = () => user().image ?? undefined;
+        const initials = () => user().name.split(/\s+/).map((x) => x.charAt(0));
+        const imageFallback = () =>
+          initials().length > 1
+            ? `${initials()[0]}${initials()[initials().length - 1]}`
+            : initials()[0];
+
         return (
-          <>
-            <Button
-              variant="secondary"
-              onClick={() =>
-                signOut({
-                  onSuccess: () => {
-                    navigate("/");
-                  },
-                })}
-            >
-              Sign Out
-            </Button>
-            <pre>{JSON.stringify(data(), null, 2)}</pre>
-          </>
+          <Suspense fallback={<Skeleton />}>
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  Welcome{" "}
+                  {user().displayUsername ?? user().username ?? user().name}
+                </CardTitle>
+                <CardDescription class="flex gap-2">
+                  <Show
+                    when={data().user.isAnonymous ?? false}
+                    fallback={<Badge>@{data().user.email.split("@")[1]}</Badge>}
+                  >
+                    <Badge variant="secondary">Anonymous</Badge>
+                  </Show>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Avatar>
+                  <AvatarImage src={image()} />
+                  <AvatarFallback>{imageFallback()}</AvatarFallback>
+                </Avatar>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    signOut({
+                      onSuccess: () => {
+                        navigate("/");
+                      },
+                    })}
+                >
+                  Sign Out
+                </Button>
+              </CardFooter>
+            </Card>
+          </Suspense>
         );
       }}
     </Show>
