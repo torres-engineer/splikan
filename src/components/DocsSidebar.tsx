@@ -48,7 +48,9 @@ export function DocsSidebar(
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <Logo />
+        <A class="contents" href="/">
+          <Logo />
+        </A>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

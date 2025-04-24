@@ -21,6 +21,7 @@
 import { type RouteSectionProps, useLocation } from "@solidjs/router";
 import { createMemo, type JSX, Show } from "solid-js";
 import { DocsSidebar } from "~/components/DocsSidebar";
+import { Footer } from "~/components/Footer";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -100,6 +101,8 @@ export default function DocsLayout(props: RouteSectionProps): JSX.Element {
         <main class="flex flex-1 flex-col gap-4 p-4">
           {props.children}
         </main>
+        <Separator />
+        <Footer />
       </SidebarInset>
     </SidebarProvider>
   );
