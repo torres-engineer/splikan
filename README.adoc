@@ -1,0 +1,564 @@
+= Splikan: S2S peer tutoring made easy!
+João_Augusto Costa_Branco_Marado Torres <torres.dev@disroot.org>
+0.1.0, {docdate}
+:description: S2S (Student-to-Student) peer tutoring made easy!
+:seclinks:
+:sectanchors:
+:reproducible:
+:showtitle!:
+:keywords: S2S, student-to-student, peer tutoring, education
+:license-url: https://www.gnu.org/licenses/agpl-3.0.html
+:license-title: AGPL-3.0-or-later
+:docinfo: shared
+:imagesdir: ./public
+:toc: macro
+:toc-title:
+:icons: font
+:source-highlighter: highlight.js
+:app-name: Splikan
+:url-project: https://github.com/torres-engineer/splikan
+:url-repo: https://github.com/torres-engineer/splikan.git
+:url-demo: https://github.com/torres-engineer/splikan
+
+[#top]
+////
+image::logo.webp[Logo]
+image::banner.webp[Banner]
+////
+
+[.text-center.lead]
+{description}
+
+[.text-center]
+image:https://img.shields.io/badge/license-MIT-blue.svg?labelColor=003694&color=ffffff[License,link={license-url},title={license-title}]
+image:https://img.shields.io/github/contributors/torres-engineer/splikan?labelColor=003694&color=ffffff[GitHub Contributors,title=GitHub Contributors]
+image:https://img.shields.io/github/stars/torres-engineer/splikan.svg?labelColor=003694&color=ffffff[Stars,title=Stars]
+image:https://img.shields.io/github/forks/torres-engineer/splikan.svg?labelColor=003694&color=ffffff[Forks,title=Forks]
+image:https://img.shields.io/github/issues/torres-engineer/splikan.svg?labelColor=003694&color=ffffff[Issues,title=Issues]
+
+[.text-center]
+image:https://img.shields.io/badge/AGPL--3.0-red?style=for-the-badge[License,link={license-url},title={license-title}]
+// image:https://img.shields.io/badge/orcid-A6CE39?style=for-the-badge&logo=orcid&logoColor=white[]
+image:https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white[Source Code Repository,link={url-repo},title=Source Code Repository]
+// image:https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white[]
+// image:https://img.shields.io/badge/Tor_Browser-7D4698?style=for-the-badge&logo=Tor-Browser&logoColor=white[]
+
+[.text-center.lead]
+Jump to the xref:#toc[Table of Contents]
+
+.What is {app-name} and why does it exist?
+****
+
+{app-name} is a platform that helps students in two ways:
+
+* If you want to give turoring for whatever reason, you can easily share your
+  availability with your entire school community;
+* If you want tutoring, there will be a list of other students in your school
+  community who, as students, know what you are going through, and may be able
+  to help you in a way that the teachers cannot.
+
+This facilitates the act of giving and receiving help, while strengthening the
+school community.
+
+[.small]#Jump to the xref:#toc[Table of Contents]#
+
+[discrete]
+=== Motivation
+
+When I went to İstanbul, Türkiye, as an exchange student last in the semester
+of 2024, I installed Meta`'s WhatsApp so that I could talk to my family. But
+then I found myself joining some student group from the school that recieved me.
+Multiple times, maybe once a month, there was a guy who sent the same message
+every time:
+
+....
+🔴 *( 90% to 100% Marks Surety )* 🔴
+I can help you in Final Exam/test/assignment/quiz/report/essay/research/project/courses.
+*I can help you in* :
+Mathematics
+Chemistry
+Civil Engineering
+Mechanical
+Electrical
+Engineering(All subjects)
+Computer/IT/ Database
+Survey/ design/structure
+Physics
+Biology
+Economics
+Geology
+Accounting
+Statistics
+Calculus
+Psychology
+Chemical engineering
+Autocad, revit and other Softwares
+Pearson, Aleks, Blackboard etc
+And *All Other fields*
+>>> I will give you *A+ Grades* surety.
+*SERVICES:*
+🛑Low Charges
+🛑On time delivery
+🛑Zero Plagiarism Work
+🛑24/7 Available
+🛑Money Refund on low grades
+Whatsapp Contact No:
++000000000000
+....
+
+The first time I saw this, my thoughts were like:
+
+* So informal;
+* Kinda annoying, I didn't ask for it, and I'm not interested;
+* Funny, this guy knows everything "`And *All Other fields*`", Harvard is
+  calling. Also "`90% to 100% Marks Surety`" and "`I will give you *A+ Grades*
+  surety`", this guy isn't human. The "`One time delivery`" part also had me,
+  what do you mean? are you teaching them or making their life easy at the
+  moment, fucking them up in the future?
+
+But the second time I thought how he is probably makes some money, don't know
+how much neither have any idea about what is the usual price for this type of
+services, and his service is mythical so it must be expensive as fuck.
+
+ I can also do that
+
+I myself sometimes help my classmates, but I don't charge them. And I don't
+think I would now, but maybe the new students from the freshmen. Next school
+year I can start doing this tutoring thing and charge half a school lunch per
+hour, imagining that they would probably would want a 2 hour session and that
+way it's like I'm eating a free lunch that day. And teaching is starting to
+grow on me (I'm thinking about becoming one professionally in the future).
+
+From the information I gathered:
+
+* October 9th - I showed that message to a friend and said I would do the same
+  in our school next year (joking) to which he replied it would be a money
+  farm;
+* October 10th - This is actually the third time I started this project, when I
+  `+ls -lAt+` the first try directory, the file with the oldest change was made
+  this day;
+* October 13th - In a vlog I complained that I had nothing to do and that the
+  YouTube algorithm was not giving good recommendations, plus it was raining on
+  a Sunday. When I said I had nothing to do I corrected myself and said that I
+  could start a personal project or start reading the al-Qur`'ān, but the
+  problem as always, is starting;
+* October 17th - In another vlog, I started brainstorming this project:
++
+--
+** "`A website to manage the times when I have to give tutoring, when I'm
+   available, when I'm not, that's the idea`";
+** "`There will be students, and me, the tutor, but I'll make it so that other
+   people can become tutors`";
+** "`The thing is, I'm a student too; the tutors are students`";
+** "`You have to be a student, I'll only accept e-mails from my school`";
+** "`Look at the message that guy sent on the group, take what's interesting,
+   that's what the student wants to know`".
+--
++
+Until someone walked into the room so I stopped recording. But I didn't stop
+the brainstorm because later that day, I was asking to another friend about how
+https://www.mbway.pt/[MBWay] works (the payment method for my tutoring).
+
+[.small]#Jump to the xref:#toc[Table of Contents]#
+
+[discrete]
+=== Purpose
+
+For me, at first, this project was for me to maybe make some money to pay for
+my lunch at school, and also to add things to my curriculum vitæ, and if I
+could show that I was using this project IRL on a daily basis, I think that
+would give it a lot of value.
+
+But this project gives a lot more than that, and it doesn't just have to
+benefit me.
+
+[cols="1,1"]
+|===
+|Problem |Solution
+
+|A message in a WhatsApp group chat advertising your tutoring service doesn't
+look to professional. Or a paper on a wall.
+|If it was displayed on a website dedicated to promoting tutoring services.
+That looks more formal and professional.
+
+|I also don't know who you are looking at your phone number.
+|Use your school e-mail as your primary form of identity. Knowing that you are
+also a student, makes me feel more comfortable.
+
+|Are you even a student at my school?
+|If you have a school e-mail, if you are not now, at least you were before.
+
+|This teacher sucks, I can't understand anything he's is trying to teach in
+class.
+|I don't think it's the teacher's problem. I don't think it's your problem
+either. Teachers have different ways of teaching and evaluating students.
+Different students have different ways of learning better. Sometimes your
+classmate can explain you in a different way, that is easier for you to
+understand.
+
+|I'm getting good grades, but I see that many of my classmates are struggling.
+Sometimes they ask me for my help, but it's hard to help them all at once.
+|{app-name} can help you manage your schedule.
+
+|I think I'm capable of tutoring, but I feel that it's hard to start without
+clients. How acn I advertise my services to potential clients?
+|Create and configure a tutor profile. When other students search for help in a
+subject you can help them with, you'll be displayed to them.
+
+|I don't have money to pay for outside help with my studies.
+|Other students will probably understand and even share the same situation. You
+may find a student who can help you on a subject in exchange for your help in
+another. No money involved, just sharing and exchanging wisdom.
+|===
+
+[.small]#Jump to the xref:#toc[Table of Contents]#
+
+[discrete]
+=== Understanding
+
+Let's deconstruct the project's slogan if I can call it that.
+
+[quote]
+{description}
+
+I really need to explain the term *S2S*, the concept of student-to-student
+comes from the concept of https://en.wikipedia.org/wiki/Peer-to-peer[P2P] from
+computing and networking where you have peers that in our case are the
+students, and they can be both the client (the one who learns) and the server
+(the one who teaches). All peers are equipotent in their network.
+
+But it's not all a bed of roses, there're still routing attacks and corrupted
+data and malware, because there can be students with bad intentions: Saying
+they know about something when they don't, lying about their GPA, teaching you
+the wrong stuff. That's why an instance of this project needs to have a good
+ToS and CoC, and punish the bad nodes accordingly. Another way to combat this
+is to have a grading system for both students and tutors, so that you can have
+an idea of what you are signing up for, and as a tutor you can receive
+constructive criticism to improve your service.
+
+The more students both learn and teach the better for everyone.
+
+Now "`{description}`" probably makes perfect sense.
+
+Note that all this has been done basically without the actual involvement of
+the school, if the school doesn't provide the students with school e-mails that
+offer SSO integration, there will be workarounds, don't worry, that's a problem
+for me, the developer, to figure out.
+
+The tools are in the hands of the students, literally. Not even I need to be
+involved in your school's {app-name} community network. This project is pushing
+for decentralization and self-hosting, and there are ways for the actual school
+to be involved in that, without the students losing their power.
+
+This couldn't be an education-friendly project without being under an
+education-friendly software license. If I were to make this software
+proprietary, I would be restricting knowledge. Not very educational, is it?
+
+Right now, you can study how this software was made, maybe modify something for
+your use case, run your modified copy and share it with the world the same way
+I'm sharing this copy. That is freedom. That is beautiful.
+
+You can also make sure that I don't do anything weird with your information for
+example. Most of the software that you use today doesn't give you that freedom
+I'm sure.
+
+And it's sad how the schools I've been to do not seem to have this perspective.
+I'm here to change that as well.
+
+Not to say that Windows and Microsoft Office licenses are a waste of money when
+you could very well use be using a Linux or BSD distribution - I'm mentioning
+https://caixamagica.pt/pt/linux-caixa-magica/[Caixa Mágica], because it might
+be my first impression of FOSS, my ICT teacher sometimes made us use it in his
+classes instead of the Windows they had, I was between 6 and 10 years old - and
+LibreOffice. That money could be used in better places like reducing the price
+of meals in the university cafeteria for everyone in the school community.
+
+And then the students create a dependency on this kind of "`harmful`" software
+and something that was free when they were in school, isn't anymore.
+
+If feel that sometimes there's an idea that the more you pay for something, the
+better the quality is, and if something is given for free, then there's no
+quality once however in that product. That's a fallacy.
+
+I'm also currently in another exchange program, in Niterói, Rio de Janeiro,
+Brasil (first sesmeter of 2025), doing an
+https://en.wikipedia.org/wiki/Human%E2%80%93computer_interaction[HCI] course.
+
+As a software developer, I sometimes do things the way that suits me best,
+forgetting that I'm just one of many people using the software. You have to be
+able to look at the software like any other kind of user. It's obvious that
+I'll know how to use my product, I made it, but will the people I made the
+software for have the same ease?
+
+I'll try my best to really learn and put into practice the things I get from
+this classrom.
+
+And because the school community isn't just made up of students, and teachers,
+hopefully everyone including every type of staff, employee can be a part of
+this and hopefully you can find a cleaning janitor who can teach you how to
+clean your dirty ass room, so that your mom doesn't have to do it next time.
+
+xref:#top[Back to the top]
+
+****
+
+.Demo
+[link={url-demo}]
+image::screenshot.webp[Screenshot of how the website looks like by default]
+
+.Table of Contents
+[%collapsible]
+====
+toc::[]
+====
+
+== About {app-name}
+
+{app-name} is an S2S peer tutoring management platform, built for students, by
+students. Focusing on a11y and inclusivity, straightforward ease of use,
+convenience but also decentralization and freedom.
+
+== Philosophy
+
+////
+****
+"A famous quote that makes sense here"
+-- I don't know, yet
+****
+////
+
+Education should not be a privilege, nor only for the elite and
+non-marginalized groups who have the financial capacity to get extra help in
+school. This project also teaches what freedom is.
+
+{app-name} pushes students to learn from each other without any kind of
+barriers.
+
+Decentralized tools like this one will strengthen the school community.
+
+== License
+
+ Splikan is free software: you can redistribute it and/or modify it under the
+ terms of the GNU Affero General Public License as published by the Free
+ Software Foundation, either version 3 of the License, or (at your option) any
+ later version.
+
+ Splikan is distributed in the hope that it will be useful, but WITHOUT ANY
+ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
+ details.
+
+== Key Features
+
+* Easy sign-up using the school e-mail;
+* Simple way to search for a tutor from your school that fits your need;
+* Easy to setup a tutor profile where:
+** You can tell about yourself (your degree, study areas you can help with,
+   tutoring prices, link to your CV, locations of tutoring, ...;
+** Specify when you are unavailable to do tutoring, students will not be able
+   to ask for help during that time;
+** You can pause the tutoring status whenever you want;
+* Students and tutors review systems;
+* Easy way to visualize how's your schedule.
+
+////
+== Documentation
+=== Getting started
+=== FAQ
+=== Wiki
+==== Student Manual (with visuals)
+==== Tutor Manual (with visuals)
+////
+
+== How to setup/use?
+
+There are multiple ways to setup one instance of this project, but the majority
+would require you to spend some money, which might not be ideal for you.
+
+I talk more about alternatives later in the section
+<<Can I do it for free (as in beer)?>>.
+
+=== Prerequisites, System Requirements and Dependencies
+
+There are some some software ypu really need, then there are other that have
+alternatives, or are completely optional. Some are not really optional, but
+there's SaaS that you can use, so you don't really have to install nothing.
+I'll just list and link them to their installation steps:
+
+* https://git-scm.com/downloads[git] (optional) - used to get the source code
+  needed to run the instance, but there's other ways to get the source;
+* some relational database:
+** SQLite
+*** https://github.com/tursodatabase/libsql/blob/main/docs/BUILD-RUN.md#build-and-run-sqld[libsql];
+*** https://turso.tech/[Turso]
+** MySQL
+*** https://mariadb.org/download/[MariaDB]
+*** https://planetscale.com/[PlanetScale]
+* a KV database (optional):
+** Redis
+*** https://docs.keydb.dev/docs/download[KeyDB]
+* https://docs.deno.com/runtime/getting_started/installation/[Deno]
+
+[IMPORTANT]
+.The source must be available always
+====
+Because License
+====
+
+=== Installation & Build instructions
+
+==== Get the source code
+
+Like I said, there's various ways to do this, my recommendation is to use git
+and the url of the repository you want to start with:
+
+.Cloning this repository
+[,console]
+----
+git clone {url-repo}
+----
+
+==== Install project dependencies
+
+This will download external code used by this project:
+
+.Install dependencies
+[,console]
+----
+deno install
+----
+
+==== Build the project
+
+If everything was done right running this on the console should cause no problem:
+
+.Build
+[,console]
+----
+deno task build
+----
+
+=== Running the app
+
+.Start a development server
+[,console]
+----
+deno task dev -- --open
+----
+
+.Start a server with your build output
+[,console]
+----
+deno task start
+----
+
+////
+=== Configuration
+==== Branding, Identity and Customization
+////
+
+=== Updating / Upgrading instructions
+
+If you have the git repository, you just need to run:
+
+.Pulling last changes from origin
+[,console]
+----
+git pull origin master
+----
+
+Otherwise you should get the updated source the same way you got it the first
+time.
+
+=== Docker Deployment
+
+=== Can I do it for free (as in beer)?
+
+TL;DR: Yes.
+
+There's alternatives to doing it this way.
+
+==== Edge Deployment V.S. Self-Hosting
+
+==== Is it really free?
+
+It's possible to deploy an instance without spending money (to a certain
+point).
+
+Normally this alternative only starts to require money if there's a lot of
+users using it frequently. But imagining an instance will only provide the
+service for a single school and not everybody from the school will use it
+(unfortunatly), what won't be a problem.
+
+===== Recommended Services
+
+To deploy the instance:
+* https://vercel.com/[Vercel]
+
+For the database:
+* https://turso.tech/[Turso]
+* https://planetscale.com/[PlanetScale]
+
+==== Instructions
+
+////
+== Integration
+=== API
+== Plugins
+////
+
+== Development
+
+For more information about how to contribute for this project, please read
+link:CONTRIBUTIONS[]
+
+=== Implementation
+==== Tech Stack
+
+* deno
+* solid and Solid Start
+* tailwind
+* vitest
+* solid-ui / kobalte / corvu
+* Kysely
+* better-auth
+* valibot
+* tanstack-form
+* tanstack-query
+* tRPC
+
+==== Acknowledgments
+=== Roadmap / Milestones
+
+== Who uses Splikan
+
+N/A
+
+NOTE: If you know of or run and instance of this project, edit this file and
+give a pull request!
+
+== Feedback and Contributions
+
+link:AUTHORS[]
+
+link:CONTRIBUTORS[]
+
+=== Make the project known
+* Star it;
+* Share it;
+* Write about it.
+
+=== Product Hunt
+=== Emailware
+=== Translation Contributions
+=== Issues & Pull requests
+
+== Related
+=== Academic Publications
+=== Mentions / Who talks about Splikan
+=== Projects
+=== Links
+
+== Contacts
+
+== Maintainers / Credits
