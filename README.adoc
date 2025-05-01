@@ -306,6 +306,8 @@ xref:#top[Back to the top]
 [link={url-demo}]
 image::screenshot.webp[Screenshot of how the website looks like by default]
 
+'''
+
 .Table of Contents
 [%collapsible]
 ====
