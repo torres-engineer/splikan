@@ -47,7 +47,7 @@ export default defineConfig({
     minify: false,
     node: false,
     analyze: {},
-    plugins: ["./server/plugins/html_license_notice_comment.ts"],
+    plugins: [],
   },
   middleware: "src/middleware/index.ts",
   experimental: {
