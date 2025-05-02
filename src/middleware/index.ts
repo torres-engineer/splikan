@@ -43,22 +43,66 @@ You should have received a copy of the GNU Affero General Public License
 along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
 `;
 
+const DOCTYPE = "<!DOCTYPE html>";
+
 export default createMiddleware({
   onRequest(event: FetchEvent): void | Response {
     event.locals.startTime = Date.now();
   },
   onBeforeResponse(
-    _event: FetchEvent,
+    event: FetchEvent,
     response: { body?: Awaited<EventHandlerResponse> },
   ): void | Response {
-    if (
-      typeof response.body === "string" &&
-      response.body.includes("<!DOCTYPE html>")
-    ) {
-      response.body = response.body.replace(
-        "<!DOCTYPE html>",
-        `<!DOCTYPE html>\n<!--${notice}-->`,
-      );
+    if (!event.response.headers.get("Content-Type")?.includes("text/html")) {
+      return;
+    }
+
+    if (response.body !== undefined) {
+      if (
+        typeof response.body === "string" &&
+        response.body.includes("<!DOCTYPE html>")
+      ) {
+        response.body = response.body.replace(
+          DOCTYPE,
+          `${DOCTYPE}\n<!--${notice}-->\n`,
+        );
+      } else if (response.body instanceof ReadableStream) {
+        let injected = false;
+        let buffered = "";
+        const decoder = new TextDecoder();
+        const encoder = new TextEncoder();
+        response.body = response.body.pipeThrough(
+          new TransformStream<Uint8Array, Uint8Array>({
+            start(): void {},
+            transform(
+              chunk: Uint8Array,
+              controller: TransformStreamDefaultController,
+            ): void {
+              if (injected) {
+                controller.enqueue(chunk);
+                return;
+              }
+              buffered += decoder.decode(chunk, { stream: true });
+              if (buffered.length >= DOCTYPE.length) {
+                let output = buffered;
+                if (buffered.startsWith(DOCTYPE)) {
+                  output = buffered.replace(
+                    DOCTYPE,
+                    `${DOCTYPE}\n<!--${notice}-->\n`,
+                  );
+                }
+                controller.enqueue(encoder.encode(output));
+                injected = true;
+              }
+            },
+            flush(controller: TransformStreamDefaultController): void {
+              if (!injected && buffered.length > 0) {
+                controller.enqueue(encoder.encode(buffered));
+              }
+            },
+          }),
+        );
+      }
     }
   },
 });
