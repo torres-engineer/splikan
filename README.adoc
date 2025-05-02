@@ -30,14 +30,13 @@ image::banner.webp[Banner]
 {description}
 
 [.text-center]
-image:https://img.shields.io/badge/license-MIT-blue.svg?labelColor=003694&color=ffffff[License,link={license-url},title={license-title}]
 image:https://img.shields.io/github/contributors/torres-engineer/splikan?labelColor=003694&color=ffffff[GitHub Contributors,title=GitHub Contributors]
 image:https://img.shields.io/github/stars/torres-engineer/splikan.svg?labelColor=003694&color=ffffff[Stars,title=Stars]
 image:https://img.shields.io/github/forks/torres-engineer/splikan.svg?labelColor=003694&color=ffffff[Forks,title=Forks]
 image:https://img.shields.io/github/issues/torres-engineer/splikan.svg?labelColor=003694&color=ffffff[Issues,title=Issues]
 
 [.text-center]
-image:https://img.shields.io/badge/AGPL--3.0-red?style=for-the-badge[License,link={license-url},title={license-title}]
+image:https://img.shields.io/badge/AGPL--3.0-663366?style=for-the-badge[License,link={license-url},title={license-title}]
 // image:https://img.shields.io/badge/orcid-A6CE39?style=for-the-badge&logo=orcid&logoColor=white[]
 image:https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white[Source Code Repository,link={url-repo},title=Source Code Repository]
 // image:https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white[]
@@ -304,7 +303,7 @@ xref:#top[Back to the top]
 
 .Demo
 [link={url-demo}]
-image::screenshot.webp[Screenshot of how the website looks like by default]
+image::screenshot.png[Screenshot of how the website looks like by default]
 
 '''
 
@@ -340,15 +339,15 @@ Decentralized tools like this one will strengthen the school community.
 
 == License
 
- Splikan is free software: you can redistribute it and/or modify it under the
- terms of the GNU Affero General Public License as published by the Free
- Software Foundation, either version 3 of the License, or (at your option) any
- later version.
+Splikan is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
 
- Splikan is distributed in the hope that it will be useful, but WITHOUT ANY
- WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
- details.
+Splikan is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
+details.
 
 == Key Features
 
@@ -356,7 +355,7 @@ Decentralized tools like this one will strengthen the school community.
 * Simple way to search for a tutor from your school that fits your need;
 * Easy to setup a tutor profile where:
 ** You can tell about yourself (your degree, study areas you can help with,
-   tutoring prices, link to your CV, locations of tutoring, ...;
+   tutoring prices, link to your curriculum vitæ, locations of tutoring, ...;
 ** Specify when you are unavailable to do tutoring, students will not be able
    to ask for help during that time;
 ** You can pause the tutoring status whenever you want;
@@ -390,16 +389,16 @@ I'll just list and link them to their installation steps:
 * https://git-scm.com/downloads[git] (optional) - used to get the source code
   needed to run the instance, but there's other ways to get the source;
 * some relational database:
-** SQLite
+** SQLite:
 *** https://github.com/tursodatabase/libsql/blob/main/docs/BUILD-RUN.md#build-and-run-sqld[libsql];
-*** https://turso.tech/[Turso]
-** MySQL
-*** https://mariadb.org/download/[MariaDB]
-*** https://planetscale.com/[PlanetScale]
-* a KV database (optional):
-** Redis
-*** https://docs.keydb.dev/docs/download[KeyDB]
-* https://docs.deno.com/runtime/getting_started/installation/[Deno]
+*** https://turso.tech/[Turso];
+** MySQL:
+*** https://mariadb.org/download/[MariaDB];
+*** https://planetscale.com/[PlanetScale];
+* a key database (optional):
+** Redis:
+*** https://docs.keydb.dev/docs/download[KeyDB];
+* https://docs.deno.com/runtime/getting_started/installation/[Deno].
 
 [IMPORTANT]
 .The source must be available always
@@ -417,7 +416,7 @@ and the url of the repository you want to start with:
 .Cloning this repository
 [,console]
 ----
-git clone {url-repo}
+git clone https://github.com/torres-engineer/splikan.git
 ----
 
 ==== Install project dependencies
@@ -495,9 +494,11 @@ service for a single school and not everybody from the school will use it
 ===== Recommended Services
 
 To deploy the instance:
+
 * https://vercel.com/[Vercel]
 
 For the database:
+
 * https://turso.tech/[Turso]
 * https://planetscale.com/[PlanetScale]
 

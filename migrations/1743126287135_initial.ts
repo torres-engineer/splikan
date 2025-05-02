@@ -219,17 +219,26 @@ export async function up(db: Kysely<InitialDB>): Promise<void> {
       (col) => col.references("degree.id").onDelete("set null"),
     )
     .addColumn("price", "float4", (col) => col.unsigned())
-    .addColumn("price_unit", "text", (col) => col.notNull().defaultTo(sql`"h"`))
+    .addColumn("price_unit", "text", (col) =>
+      col.notNull().defaultTo(sql`
+        "h"
+      `))
     .addColumn(
       "price_currency",
       "text",
-      (col) => col.notNull().defaultTo(sql`"EUR"`),
+      (col) =>
+        col.notNull().defaultTo(sql`
+          "EUR"
+        `),
     )
     .addColumn("max_students_per_class", "integer", (col) => col.unsigned())
     .addColumn("gpa", "integer", (col) => col.unsigned())
     .addColumn("description", "text")
     .addColumn("curriculum_vitae", "text")
-    .addColumn("pause", "boolean", (col) => col.notNull().defaultTo(sql`1`))
+    .addColumn("pause", "boolean", (col) =>
+      col.notNull().defaultTo(sql`
+        1
+      `))
     .execute();
   await db.schema.createTable("study_area_group")
     .addColumn("id", "integer", (col) => col.autoIncrement().primaryKey())
@@ -278,7 +287,10 @@ export async function up(db: Kysely<InitialDB>): Promise<void> {
     .addColumn("from", "datetime", (col) => col.notNull())
     .addColumn("to", "datetime", (col) => col.notNull())
     .addColumn("max_students", "integer", (col) => col.notNull().unsigned())
-    .addColumn("accepted", "boolean", (col) => col.notNull().defaultTo(sql`0`))
+    .addColumn("accepted", "boolean", (col) =>
+      col.notNull().defaultTo(sql`
+        0
+      `))
     .addColumn(
       "tutor_id",
       "integer",

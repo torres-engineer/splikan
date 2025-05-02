@@ -52,7 +52,9 @@ export async function up(db: Kysely<InitialDB>): Promise<void> {
             join.on(
               "user.email",
               "=",
-              sql`student.student_id || '@' || school.domain`,
+              sql`
+                student.student_id || '@' || school.domain
+              `,
             ),
         )
         .innerJoin("account", "account.userId", "user.id")

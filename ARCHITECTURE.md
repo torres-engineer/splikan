@@ -76,7 +76,9 @@ const migrationFile = "better-auth_migrations/2025-04-21T01-12-43.027Z.sql";
 export async function up(db: Kysely<InitialDB>): Promise<void> {
   await Deno.readTextFile(migrationFile).then((raw) => {
     for (const i of raw.split("\n\n")) {
-      sql`${sql.raw(i)}`.execute(db);
+      sql`
+        ${sql.raw(i)}
+      `.execute(db);
     }
   });
 }

@@ -38,14 +38,24 @@ export const dataRouter = router({
         .selectFrom(["class", "tutor"])
         .innerJoin("student_class", "student_class.class_id", "class.id")
         .select([
-          sql<number>`COUNT(DISTINCT class.id)`.as("completed_classes"),
-          sql<number>`COUNT(DISTINCT tutor.id)`.as("active_tutors"),
-          sql<number>`COUNT(DISTINCT student_class.student_id)`.as(
+          sql<number>`
+            COUNT(DISTINCT class.id)
+          `.as("completed_classes"),
+          sql<number>`
+            COUNT(DISTINCT tutor.id)
+          `.as("active_tutors"),
+          sql<number>`
+            COUNT(DISTINCT student_class.student_id)
+          `.as(
             "students_tutored",
           ),
           sql<
             number
-          >`SUM(DISTINCT (julianday("to") - julianday("from")) * 24 * 60)`
+          >`
+            SUM(
+              DISTINCT (julianday("to") - julianday("from")) * 24 * 60
+            )
+          `
             .as(
               "minutes_of_tutoring",
             ),
