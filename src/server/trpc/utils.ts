@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Splikan.  If not, see <https://www.gnu.org/licenses/>.
  */
-"use server";
 import {
   type inferProcedureBuilderResolverOptions,
   initTRPC,

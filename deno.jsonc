@@ -99,5 +99,10 @@ along with Splikan.  If not, see <https: //www.gnu.org/licenses/>.
     "cron",
     "kv"
   ],
-  "nodeModulesDir": "auto"
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "lib": [
+      "deno.ns"
+    ]
+  }
 }

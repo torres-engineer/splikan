@@ -50,5 +50,7 @@ Thumbs.db
 /.vite-inspect
 /src/generated
 
+/stats.html
+
 data.sqld
 dump.rdb

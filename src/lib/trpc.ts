@@ -53,8 +53,7 @@ export const transformer = {
   input: superjson,
   output: {
     serialize: (object: unknown) => uneval(object),
-    // deno-lint-ignore no-eval
-    deserialize: (object: unknown) => eval(`(${object})`),
+    deserialize: (object: unknown) => eval?.(`"use strict";(${object})`),
   },
 } satisfies TRPCCombinedDataTransformer;
 
