@@ -27,6 +27,7 @@ import { providers } from "./server/auth/providers.ts";
 import { getLocalIPs } from "./lib/utils.ts";
 import { env } from "../deps.ts";
 import { ulid } from "ulid";
+// import { NAMESPACE_DNS, v5 } from "@std/uuid";
 import { APIError } from "better-call";
 
 export const auth = betterAuth({
@@ -96,6 +97,11 @@ async function afterCreateAccount(account: Account): Promise<void> {
 
   await db.insertInto("student")
     .values({
+      //hash: await v5.generate(
+      //  NAMESPACE_DNS,
+      //  new TextEncoder().encode(schoolDomain),
+      //),
+      // hash: crypto.randomUUID(),
       hash: ulid(),
       student_id: studentId,
       school_id: schoolId,

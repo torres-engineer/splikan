@@ -24,7 +24,7 @@ import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { createClient } from "redis";
 
 export const dialect = new LibsqlDialect({
-  url: Deno.env.get("DATABASE_URL") ?? "file:./data",
+  url: Deno.env.get("DATABASE_URL") ?? "libsql://localhost:8080?tls=0",
   // authToken: "<token>", // optional
 });
 

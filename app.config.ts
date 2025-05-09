@@ -61,7 +61,7 @@ export default defineConfig({
     }
     return {
       define: {
-        //"import.meta.env.ENV": JSON.stringify(Deno.env.get("NODE_ENV")),
+        "import.meta.env.ENV": JSON.stringify(Deno.env.get("NODE_ENV")),
       },
       plugins: [
         Inspect({
@@ -78,8 +78,8 @@ export default defineConfig({
         transformer: "postcss",
       },
       assetsInclude: undefined,
-      //logLevel: Deno.env.get("NODE_ENV") === "production" ? "silent" : "info",
+      logLevel: Deno.env.get("NODE_ENV") === "production" ? "silent" : "info",
     };
   },
-  //devOverlay: Deno.env.get("NODE_ENV") !== "production",
+  devOverlay: Deno.env.get("NODE_ENV") !== "production",
 });

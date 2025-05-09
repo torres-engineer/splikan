@@ -44,6 +44,7 @@ along with Splikan.  If not, see <https: //www.gnu.org/licenses/>.
   },
   "license": "AGPL-3.0-or-later",
   "imports": {
+    "@std/uuid": "jsr:@std/uuid@^1.0.7",
     "@valibot/valibot": "jsr:@valibot/valibot@^1.0.0",
     "solid-js": "npm:solid-js"
   },

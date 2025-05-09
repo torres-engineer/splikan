@@ -1,6 +1,9 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@std/bytes@^1.0.5": "1.0.5",
+    "jsr:@std/crypto@^1.0.4": "1.0.4",
+    "jsr:@std/uuid@^1.0.7": "1.0.7",
     "jsr:@valibot/valibot@1": "1.0.0",
     "npm:@better-auth/cli@*": "1.2.7_prisma@5.22.0_@prisma+client@5.22.0__prisma@5.22.0_@types+better-sqlite3@7.6.13_better-sqlite3@11.9.1_kysely@0.28.1",
     "npm:@commitlint/cli@19.8.0": "19.8.0",
@@ -80,6 +83,19 @@
     "npm:vitest@^3.0.9": "3.1.1_@vitest+ui@3.1.1__vitest@3.1.1__jsdom@26.1.0_jsdom@26.1.0_vite@6.3.2__picomatch@4.0.2"
   },
   "jsr": {
+    "@std/bytes@1.0.5": {
+      "integrity": "4465dd739d7963d964c809202ebea6d5c6b8e3829ef25c6a224290fbb8a1021e"
+    },
+    "@std/crypto@1.0.4": {
+      "integrity": "cee245c453bd5366207f4d8aa25ea3e9c86cecad2be3fefcaa6cb17203d79340"
+    },
+    "@std/uuid@1.0.7": {
+      "integrity": "6885db5cd60794049d1661b5cf06b1e1ed65b2affd054ec8b06da7d2efd421ca",
+      "dependencies": [
+        "jsr:@std/bytes",
+        "jsr:@std/crypto"
+      ]
+    },
     "@valibot/valibot@1.0.0": {
       "integrity": "2e16f77fb6a1721c0c219fe0eecdc902a2d8e3d45b98383b228eda93c394e4b7"
     }
@@ -7894,6 +7910,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/uuid@^1.0.7",
       "jsr:@valibot/valibot@1",
       "npm:solid-js@*"
     ],
