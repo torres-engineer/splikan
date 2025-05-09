@@ -51,6 +51,6 @@ keywords:
   - "tutoring"
 license:
   - AGPL-3.0-or-later
-commit: 57cad796454bc105fb92765c4196f29400cafa83
+commit: c8848419e149c527a58b5fbc3a2cf7082d50b817
 version: 0.1.0
-date-released: 2025-05-02
+date-released: 2025-05-08

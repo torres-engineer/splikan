@@ -67,8 +67,6 @@ if ! deno fmt --unstable-sql --check; then
   exit 1
 fi
 
-git diff --name-only | xargs git add 2> /dev/null
-
 if ! deno lint --rules-include=no-console; then
   echo "Please run \`deno lint --rules-include=no-console\`."
   exit 1
