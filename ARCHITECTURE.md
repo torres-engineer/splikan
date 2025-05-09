@@ -1,20 +1,58 @@
-Introduction
+This file is supposed to explain of Splikan works technically and talk about
+some arquitectural decisions so it's easier for you to modify it and contribute
+to the project. It assumes you are a developer and not a user.
 
-# What's Splikan (technically)
+# What's Splikan
+
+It's a [SolidStart](https://start.solidjs.com/) app on [Deno](https://deno.com/)
+as the JS runtime basically.
+
+There's a need of authentication, so for that we are using
+[Better Auth](https://www.better-auth.com/).
+
+Designed with self-hosting and community ownership in mind, for students to be
+able to maintain an instance or the school itself.
+
+Local development ready without need for an actual school e-mail so everybody
+can contribute.
 
 ## The problem beign solved
 
+- Informal tutoring;
+- Relying on outside of school resources for academic help;
+- Promote students helping each other;
+- Lack of a platform for students to ask for help;
+- Lack of a platform for tutors to share their availability to help to their
+  target service consumers;
+- Students rely to much on teachers.
+
 ## What isn't Splikan
+
+- It's not a marketplace. Splikan only helps with tutor discovering and
+  scheduling. The rest, payments for example, it's all done between the
+  students;
+- There's no suggestions algorithm. The student knows what he is looking for, we
+  give them the tools to search for it.
 
 # Design Philosophy & Principles
 
+- KISS -- The idea of the project is simple, so there's no need to complicate.
+  It should be easily understandable and adaptable without complexity;
+- Somewhat decentralized -- The school doesn't really need to be involved;
+- FLOSS -- Using an education friendly license that promotes sharing knowledge
+  and ensures that education is a freedom;
+- Everything is made around the student email;
+- Not a nerd friendly deployment methods;
+- We are glueing tools, not really creating something revolutionary.
+
 # Architecture Overview
+
+![A visual diagram of the Splikan architecture](./docs/arch.svg "Splikan
+architecture")
 
 ## UML
 
 # Anatomy of Splikan
-
-## Directory structure / Source code layout / Codemap
 
 This is a Solid Start project so most of the files and directories I don't
 really need to explain. Please read:
@@ -23,6 +61,8 @@ really need to explain. Please read:
 - <https://docs.solidjs.com/solid-start/reference/entrypoints/app-config#appconfigts>
 
 before proceeding.
+
+## Directory structure / Source code layout / Codemap
 
 ### `/migrations/` directory
 
@@ -105,11 +145,6 @@ Generates the file `/src/generated/docs_nav.ts` using the contents from
 There's the deno task `gen_docs_nav` that is run every time you `deno task dev`
 or `deno task build` as a dependency.
 
-### `/server/plugins/html_license_notice_comment.ts` file
-
-Failed attempt to add a license notice at the start of each HTML file using
-nitro I guess.
-
 ### `/setup.sh` file
 
 Script to setup the development environment.
@@ -138,28 +173,161 @@ Sharable code in the client and server.
 
 Where the customizable CSS will live.
 
-# Workflow
-
-## Development flow
-
-## Release flow
-
-## End-User flow
-
-## Updating flow
-
 # Key Design Decisions
+
+## The frontend framework
+
+The author is really not into the JS frontend (meta) frameworks world, so I
+think I made the choice to use SolidJS and SolidStart based on
+[this video](https://www.youtube.com/watch?v=S7X6fLbdwlc)
 
 ## Why `deno` and not `node` + `npm` like
 
+Why Deno and not node [Node.js](https://nodejs.org/en) and why not
+[Bun](https://bun.sh/)? I'm pretty sure at the time Deno v2.0 had just lunched.
+It made me think that Deno was pretty stable. And it beign made by the same
+creator of Node.js, I don't know, it just seemed the right thing to use.
+
 ### Problems by choosing deno
+
+Now I'm kinda noticing why Deno isn't really used compared to Node,js yet. The
+JavaScript ecosystem is really dependent on Node.js and
+[npm](https://www.npmjs.com/). There's JavaScript files out there with a
+`#!/user/bin/env node` shebang. For example, doing `deno task build` somehow
+doesn't recognize the `Deno` namespace. Most package's documentations don't even
+show you how to install the package with Deno (`deno add --npm
+<package>`), but
+you'll see Bun. Still, I'm sticking with Deno. I didn't even consider Bun to be
+honest.
+
+## Authentication
+
+The authentication ideally will be made using the student's school e-mail, via
+SSO. The idea is that school provide e-mails for each student, and from the last
+4 school I've been, I don't know how it works reaaly, but the e-mails were from
+Google or Microsoft, just had the school as the domain. What matters to me is
+that, because of that, you probably will be able to use Google, Microsoft,
+etc... for SSO with Better-Auth. Wand in the future we might even be able to use
+other services for messaging between students or cloud storage so images and
+files used on the student profile don't need to be on your server unless
+everyone needs access to it. Something to explore later.
+
+## UI Design
+
+I'm not really go with design, and I finnaly accepted it and the third time
+trying to create this project, I'm now using a componets library, in this case
+[SolidUI](https://www.solid-ui.com/) which uses
+[Kobalte](https://kobalte.dev/docs/core/overview/introduction) and
+[corvu](https://corvu.dev/) under the hood that provide non stylized
+accessibility friendly components. I don't like the idea because I feel writing
+the styles from scratch gives more soul to it, and I still feel that way, but
+then I thought that the people that would be usingthis project just want
+something simple to use. If every website looks the same, it's esiear for them
+to every website because of memorization. So at first my idea was to use Kobalte
+or corvu and still do the styling myself. But I didn't know how to decide
+between the two, so I decided fuck it let's just go with SolidUI and not think
+about it anymore.
+
+I also feel plesure in writing CSS, compared to using
+[Tailwind CSS](https://tailwindcss.com/). But having your styles directly where
+it is going to be applied makes the styling process much easier for the present,
+but also the future, even tho I hate to see those long class attributes on HTML.
+
+### How to frontend develop
+
+Doing frontend, think about mobile first. I know people (students) who only have
+a smartphone, but no PC/laptop. I don't know students that do not have a
+smartphone. Also think about the actual people that will be using your frontend.
+Not everyone thinks the same way as you, not everyone studies CS or is fluent in
+technology.
+
+There's things that you can do to help people with visual difficulties for
+example, that don't affect users without those difficulties, text size and color
+contrast.
+
+Use "normal people" text, not technical text.
+
+## Client-Server interactions
+
+For communication between client and server I'm trying [tRPC](https://trpc.io/)
+
+- [TanStack Query](https://tanstack.com/query/latest) and I'm really enjoying
+  it.
 
 # Testing
 
+There's [`deno test`](https://docs.deno.com/runtime/fundamentals/testing/) and
+[Vitest](https://vitest.dev/). I haven't wrote a single test, but it is there.
+
 # Costumization
+
+Is should be easy for an instance to give an identity that reflects the school.
+
+But there's also not a lot of things that can be changed, here's some:
+
+- App name and/or logo;
+- Color scheme;
+- Instance specific policies such as ToS and Coc;
+- Auth config;
+
+There is a [Valibot](https://valibot.dev/) schema that will parse the
+environment variables and config files to create this config and make those
+values available throught the server side;
 
 # Cross-Cutting Concerns
 
 # Architecture Invariants
 
+These are sort of rules that make Splikan what it is. laws that you should not
+violate, or it isn't Splikan anymore.
+
+## Auth can only be made if there is an e-mail involved
+
+We will always look into the domain to filter what's relevant information for
+the student.
+
+If a school doesn't provide students with e-mails that have an school domain and
+instead a common `@gmail.com` e-mail, the filtering process and the process to
+know who can actually authenticate is impossible to do automatically.
+
+I remember having a school e-mail with the domain `@live.madeira-edu.pt` that
+was not restricted for my school only but for all schools in my district. For
+cases like that, we know that we are a student, but we don't know the school, so
+we still can't do the filtering automatically.
+
+## All tutors are students or have a school e-mail
+
+That can include teachers and other staff. This is to strengthen the school
+community and make it less dependent on external sources of learning and
+knowledge.
+
+A tutor is a student (school e-mail haver) who decided that can help other
+students.
+
+So your Splikan instance can provide services for multiple schools, but the
+tutoring advertisements that are shown to a student are only from his school.
+
+## Every Client-Server communication is made with the TRPC + TanStack Query combo
+
+It started like this, there's no need to do this in two different ways on the
+same project. So no direct usage of
+[`createResource`](https://docs.solidjs.com/reference/basic-reactivity/create-resource)
+
+## Not to much styling
+
+Don't care about colors. That will be provided on the config of an instance.
+
+Use always when available the SolidUI components, then fallback to Kobalte and
+corvu plus Tailwind CSS when needed.
+
+Focus on making the UI simple and understandable.
+
 # Code generation
+
+# Future Concerns
+
+- Moderation dashboard to block email's toghether with an report student
+  capability alongside with the block student already existant;
+- Cooperation between schools;
+- look into nostr, ActivityPub, At protocol, Fediverse, PDSes, Solid Project
+  (from the HTTP guy), IPFS, and see if it makes sense in this project.
