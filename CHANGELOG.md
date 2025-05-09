@@ -10,42 +10,26 @@ and this project adheres to
 
 ### Added
 
-- Add missing QueryBoundary
+- Add [Tailwind CSS](https://tailwindcss.com/)
+- Add [SolidUI](https://www.solid-ui.com/) as the components library
+- Add separated CSS file for the Tailwind CSS theme
+- Add [Vitest](https://vitest.dev/) for creating tests
+- Add new Homepage for the client.
+- Add [Kyseky](https://kysely.dev/) as the SQL query builder
+- Add DB migrations and seeds
+- Add `setup.sh` script
+- Add [Better Auth](https://www.better-auth.com/) for authentication
+- Local development doesn't require e-mail to log in
+- Add [TanStack Query](https://tanstack.com/query/latest)
+- Add [tRPC](https://trpc.io/)
 
 ### Changed
-
-- Tiny changes to docs layout
-- Student account linking
-- Show user info when logged in
-- From CSS grid to Resizable
-- Tanstack query & trpc
-- TRPC
-- TRPC
-- Tanstack query
-- Select to combobox component
-- Anonymous sign in for local development
-- Sign in with username for local development
-- Better-auth
-- Auto setup
-- Typo
-- Migrate and seed
-- Basic db setup
-- Deno.lock
-- Homepage
-- Tailwindcss theme
-- Tailwindcss
 
 ### Deprecated
 
 ### Removed
 
-- Remove redundant column
-
 ### Fixed
-
-- Combobox figured out
-- Create `/test_report` directory
-- Vitest
 
 ### Security
 
